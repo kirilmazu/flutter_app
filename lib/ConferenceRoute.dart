@@ -21,7 +21,7 @@ class ConferenceRoute extends StatelessWidget{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  card.image,
+                  Center( child: card.image,),
                   Text(card.date, style: TextStyle(fontSize: 18.0)),
                   Text(card.place, style: TextStyle(fontSize: 18.0)),
                   Text(card.title, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
