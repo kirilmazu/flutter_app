@@ -17,31 +17,27 @@ class ConferenceRoute extends StatelessWidget{
         title: Text("Conference name"),
       ),
 
-      body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget> [
-            card.image,
-            Expanded(
+      body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  card.image,
                   Text(card.date, style: TextStyle(fontSize: 18.0)),
                   Text(card.place, style: TextStyle(fontSize: 18.0)),
                   Text(card.title, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
                   Text(card.description,),
+                  Divider(
+                    color: Colors.indigo,
+                  ),
+                  BuildButton(),
                 ],
               ),
-            ),
-            buildButton(),
-          ]
       ),
     );
   }
-
-
 }
 
-class buildButton extends StatelessWidget{
+class BuildButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
