@@ -21,43 +21,42 @@ class NoteRoute extends StatelessWidget{
         title: Text("Notes"),
       ),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget> [
-          VerticalPadding(
-            padding: 10,
-            child: _buildSubjectTextFild("Type here the subject of new note", subjectController),
-          ),
-          VerticalPadding(
-            padding: 10,
-            child: _buildBodyTextFild("Type here the body of new note and press the 'add' button", bodyController),
-          ),
-          VerticalPadding(
-            padding: 8,
-            child: _buildButton(context),
-          ),
-          VerticalPadding(
-            padding: 5,
-            child: Divider(
-              color: Colors.indigo,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget> [
+            VerticalPadding(
+              padding: 10,
+              child: _buildSubjectTextField("Type here the subject of new note", subjectController),
             ),
-          ),
-          Expanded(
-              child: Column(
+            VerticalPadding(
+              padding: 10,
+              child: _buildBodyTextField("Type here the body of new note and press the 'add' button", bodyController),
+            ),
+            VerticalPadding(
+              padding: 8,
+              child: _buildButton(context),
+            ),
+            VerticalPadding(
+              padding: 5,
+              child: Divider(
+                color: Colors.indigo,
+              ),
+            ),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget> [
                 NotesList(),
                 ]
-              )
-          )
-    ]
-
-          ),
-      );
+            )
+          ]
+        )
+      )
+    );
   }
 
 
-  Widget _buildSubjectTextFild(String text, TextEditingController controller){
+  Widget _buildSubjectTextField(String text, TextEditingController controller){
     return Container(
       alignment: AlignmentDirectional.center,
       child:  Padding(
@@ -72,7 +71,7 @@ class NoteRoute extends StatelessWidget{
     );
   }
 
-  Widget _buildBodyTextFild(String text, TextEditingController controller){
+  Widget _buildBodyTextField(String text, TextEditingController controller){
     return Container(
       alignment: AlignmentDirectional.center,
       child:  Padding(
