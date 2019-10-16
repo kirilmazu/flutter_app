@@ -32,6 +32,12 @@ class LectureCard{
   final String description;
 }
 
+class Day{
+  Day({this.dayName, this.lectureCards});
+  final String dayName;
+  final List<LectureCard> lectureCards;
+}
+
 class Lecturer{
   Lecturer({this.name,});
   final String name;
