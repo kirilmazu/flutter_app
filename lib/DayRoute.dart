@@ -16,7 +16,7 @@ class DayRoute extends StatelessWidget{
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
-            Expanded(
+            SingleChildScrollView(
               child: makeCards,
             )
           ]
@@ -35,14 +35,10 @@ class DayRoute extends StatelessWidget{
       },
     ),
   );
-
-
-
 }
 
 Widget buildContent(LectureCard card){
   return Container(
-    //padding: EdgeInsets.symmetric(vertical: 8),
     child: Column(
       children: <Widget>[
         Row(
@@ -78,7 +74,6 @@ GestureDetector makeGestureDetector(LectureCard card, BuildContext context) => G
   child: Card(
     child: Row(
         textDirection: TextDirection.ltr,
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Expanded(
             child: Row(
@@ -106,7 +101,6 @@ GestureDetector makeGestureDetector(LectureCard card, BuildContext context) => G
           )
         ],
       ),
-
   ),
 );
 
