@@ -1,27 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/RegisterRout.dart';
 
 
-class LoginRout extends StatelessWidget {
+class RegisterRout extends StatelessWidget {
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final emailController = TextEditingController();
+  final roleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text("Register"),
       ),
 
       body: SingleChildScrollView(
-       child: Center(
+      child: Center(
         child: Column(
           children: <Widget> [
-            buildImage(),
+            buildTextField("Email", emailController),
             buildTextField("User name", userNameController),
             buildTextField("Password", passwordController),
-            buildLoginButton(context),
-            buildRegisterButton(context),
+            buildTextField("Confirm password", confirmPasswordController),
+            buildTextField("Role", roleController),
+            Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    buildRegisterButton(context),
+                    buildCancelButton(context),
+                  ],
+            ),
           ],
         ),
       ),
@@ -29,19 +38,6 @@ class LoginRout extends StatelessWidget {
     );
   }
 
-  Widget buildImage() {
-    return Container(
-      alignment: AlignmentDirectional.center,
-      child: Padding(
-        padding: EdgeInsets.only(top: 15, left: 60, right: 60),
-        child: Image.network(
-            'http://placeimg.com/640/480/any',
-          width: 230,
-          height: 230,
-          ),
-      ),
-    );
-  }
 
   Widget buildTextField(String text, TextEditingController controller) {
     return Container(
@@ -58,28 +54,6 @@ class LoginRout extends StatelessWidget {
     );
   }
 
-  Widget buildLoginButton(BuildContext context){
-    return Container(
-      alignment: AlignmentDirectional.center,
-      child:
-      Center(
-        child: RaisedButton(
-          child: Text("Login"),
-          onPressed: (){
-            if(userNameController.text != "" && passwordController.text != ""){
-              //if the user or password empty show message
-            }else{
-              //check user name and password
-
-              //if user name and password compatible, login and go to main rout
-              Navigator.pop(context);
-            }
-          },
-        ),
-      ),
-    );
-  }
-
   Widget buildRegisterButton(BuildContext context){
     return Container(
       alignment: AlignmentDirectional.center,
@@ -88,12 +62,32 @@ class LoginRout extends StatelessWidget {
         child: RaisedButton(
           child: Text("Register"),
           onPressed: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => RegisterRout()
-              ),
-            );
+            if(userNameController.text != "" && passwordController.text != ""){
+              //if the user or password empty show message
+            }else{
+              //check user name and password
+
+              //login
+
+              //and go back to main screen
+              Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildCancelButton(BuildContext context){
+    return Container(
+      alignment: AlignmentDirectional.center,
+      child:
+      Center(
+        child: RaisedButton(
+          child: Text("Cancel"),
+          onPressed: (){
+            //return to login rout
+            Navigator.pop(context);
           },
         ),
       ),
