@@ -15,21 +15,18 @@ class AboutRout extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-              Text(
-                "About this app",
-                maxLines: 1,
+              Text("About this app",
                 style: TextStyle(
                     fontSize: 20.0, fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
               ),
               Divider(
                 color: Colors.indigo,
               ),
               Text("Version: 1.0"),
-              Text("And mere....."),
+              Text("And mere.....\nAnd it can to be long one\nSo just add atext hear."),
             ]),
           ),
-
         ],
       ),
     );
