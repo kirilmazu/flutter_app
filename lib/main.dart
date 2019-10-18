@@ -4,6 +4,7 @@ import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LoginRoute.dart';
 import 'package:flutter_app/NoteRoute.dart';
 import 'package:flutter_app/ConferenceRoute.dart';
+import 'package:flutter_app/SettingsRout.dart';
 
 void main() => runApp(MyApp());
 
@@ -84,6 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LoginRout()),
+      );
+    }
+    else if(choice ==Constants.Settings){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SettingsRout()),
       );
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants{
+  static bool darkTeam = true;
   static const String Settings = 'Settings';
   static const String LogIn = 'LogIn';
   static const String LogOut = 'LogOut';
@@ -11,6 +12,8 @@ class Constants{
   static const List<String> choices = <String>[Settings, Conferences, Notes, About, LogIn];
 
 }
+
+const bool darkTeam = true;
 
 class myCard{
   myCard({this.title, this.description, this.image, this.place, this.date});
