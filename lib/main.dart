@@ -5,10 +5,12 @@ import 'package:flutter_app/LoginRoute.dart';
 import 'package:flutter_app/NoteRoute.dart';
 import 'package:flutter_app/ConferenceRoute.dart';
 import 'package:flutter_app/SettingsRout.dart';
+import 'package:flutter_app/AboutRout.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  Brightness brightness;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         // This is the theme of your application.
         primaryColor: Colors.lightBlue[900], //the color of the top bar
         accentColor: Colors.lightBlue[800], //the colore of screan drug
-        brightness: Brightness.dark,
+        brightness: Constants.brightness,//Brightness.dark,
 
         // Define the default font family.
         fontFamily: 'Montserrat',
@@ -91,6 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SettingsRout()),
+      );
+    }
+    else if(choice ==Constants.About){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AboutRout()),
       );
     }
   }

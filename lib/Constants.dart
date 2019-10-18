@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 
 class Constants{
   static bool darkTeam = true;
+
+  static Brightness brightness =  darkTeam ? Brightness.dark : Brightness.light;
+
+
   static const String Settings = 'Settings';
   static const String LogIn = 'LogIn';
   static const String LogOut = 'LogOut';
   static const String About = 'About';
-  static const String Conferences = 'Conferences';
   static const String Notes = 'Notes';
 
-  static const List<String> choices = <String>[Settings, Conferences, Notes, About, LogIn];
+  static const List<String> choices = <String>[Settings, Notes, About, LogIn];
 
 }
 
