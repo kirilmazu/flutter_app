@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LectureRoute.dart';
 
+/*
+Need to do:
+Center the the start and the end time
+Alignment the title to start
+
+
+ */
+
 class DayRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -90,6 +98,7 @@ GestureDetector makeGestureDetector(LectureCard card, BuildContext context) =>
                     width: 8,
                   ),
                   Flexible(
+                    flex: 1,
                     child: Column(children: <Widget>[
                       Text(
                         card.lecture,

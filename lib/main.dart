@@ -139,6 +139,9 @@ Card makeCard(ConferenceCard card) => Card(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         card.image,//add image to the card
+        Container(//make space between the image and the text
+          width: 8,
+        ),
         Expanded(
           child: Column(//add the text of the card
             crossAxisAlignment: CrossAxisAlignment.start,
