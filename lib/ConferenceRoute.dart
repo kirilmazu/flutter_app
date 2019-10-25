@@ -5,7 +5,7 @@ import 'package:flutter_app/DayRoute.dart';
 
 class ConferenceRoute extends StatelessWidget{
 
-  final myCard card;
+  final ConferenceCard card;
 
   ConferenceRoute({Key key, @required this.card}):super(key: key);
 

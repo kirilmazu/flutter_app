@@ -18,8 +18,8 @@ class Constants{
 
 const bool darkTeam = true;
 
-class myCard{
-  myCard({this.title, this.description, this.image, this.place, this.date});
+class ConferenceCard{
+  ConferenceCard({this.title, this.description, this.image, this.place, this.date});
   final String title;
   final String description;
   final Image image;

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
+import 'package:flutter_app/Data.dart';
 import 'package:flutter_app/LoginRoute.dart';
 import 'package:flutter_app/NoteRoute.dart';
 import 'package:flutter_app/ConferenceRoute.dart';
@@ -16,11 +17,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Main title',
-      debugShowCheckedModeBanner: false, //remove the debug leble from the top
+      debugShowCheckedModeBanner: false, //remove the debug label from the top
       theme: ThemeData(
         // This is the theme of your application.
-        primaryColor: Colors.lightBlue[900], //the color of the top bar
-        accentColor: Colors.lightBlue[800], //the colore of screan drug
+        primaryColor: Colors.lightBlue[900], //the color of the phone up bar
+        accentColor: Colors.lightBlue[800], //the color of the appbar
         brightness: Constants.brightness,//Brightness.dark,
 
         // Define the default font family.
@@ -55,27 +56,31 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
         actions: <Widget>[
+          //create the three dots menu in the appbar
           PopupMenuButton<String>(
             onSelected: choiceAction,
             itemBuilder: (BuildContext context){
-              return Constants.choices.map((String choise){
+              return Constants.choices.map((String choice){
                 return PopupMenuItem<String>(
-                  value: choise,
-                  child: Text(choise),
+                  value: choice,
+                  child: Text(choice),
                 );
               }).toList();
             },
           )
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          makeCards,
-        ],
-      ),
+      body: SingleChildScrollView( //make a list of all conferenceCards we get
+        child: Column(
+          children: <Widget>[
+            makeCards,
+          ],
+        ),
+      )
     );
   }
 
+  //move to relevant page after the user select option in the three dots menu in the appbar
   void choiceAction(String choice){
     if(choice == Constants.Notes){
       Navigator.push(
@@ -103,44 +108,45 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  //make clickable cards from myCards list
+  //make list of clickable cards from conferenceCards list
   final makeCards = Container(
-    child: ListView.builder(
+    child: ListView.builder( //build list of items
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: myCards.length,
+        itemCount: conferenceCards.length,
         itemBuilder: (BuildContext context, int index){
-          return makeGestureDetector(myCards[index],context);
+          return makeGestureDetector(conferenceCards[index],context); // build list of conferenceCards
         },
     ),
   );
 }
 
 //make the card clickable
-GestureDetector makeGestureDetector(myCard card, BuildContext context) => GestureDetector(
-  onTap: (){Navigator.push(
+GestureDetector makeGestureDetector(ConferenceCard card, BuildContext context) => GestureDetector(
+  onTap: (){Navigator.push( //on click move to ConferenceRoute with the conferenceCard data
     context,
     MaterialPageRoute(builder: (context) => ConferenceRoute(card: card,)),
   );},
   child: makeCard(card),
 );
 
-Card makeCard(myCard card) => Card(
+//make the conferenceCard
+Card makeCard(ConferenceCard card) => Card(
   child: Padding(
-    padding: EdgeInsets.all(24.0),
+    padding: EdgeInsets.all(10.0),
     child: Row(
       textDirection: TextDirection.ltr,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        card.image,
+        card.image,//add image to the card
         Expanded(
-          child: Column(
+          child: Column(//add the text of the card
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(card.date, style: TextStyle(fontSize: 10.0)),
-              Text(card.place, style: TextStyle(fontSize: 10.0)),
-              Text(card.title, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
-              Text(card.description, maxLines: 2, overflow:  TextOverflow.ellipsis, ),
+              Text(card.date, style: TextStyle(fontSize: 10.0)),//the first line is the date
+              Text(card.place, style: TextStyle(fontSize: 10.0)),//the second line is the location
+              Text(card.title, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),), //the threes line is conference name
+              Text(card.description, maxLines: 2, overflow:  TextOverflow.ellipsis, ), //the fourth line is one or two lines of description
             ],
           ),
         )
@@ -149,27 +155,5 @@ Card makeCard(myCard card) => Card(
   ),
 );
 
-
-//data for testing
-List<myCard> myCards = [
-  myCard(title: 'Conference 1',
-        description: 'Few words about the first conferens',
-        image: Image.network(
-        'http://placeimg.com/640/480/any',
-        width: 100,
-        height: 70,
-  ),
-        place: 'Some place 1',
-        date:  '1/1/2020',
-  ),
-  myCard(title: 'Conference 2',
-      description: 'Few words about the second conferens, and this line need to be longer.',
-      image: Image.network(
-        'http://placeimg.com/640/480/any',
-        width: 100,
-        height: 70,
-      ),
-      place: 'Some place 1',
-      date:  '1/1/2020',
-  ),
-];
+//gat the data from flutter_app/Data.dart
+List<ConferenceCard> conferenceCards = GetData.getConferenceCards();
