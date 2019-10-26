@@ -71,6 +71,7 @@ class BuildLecturer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(card.lecturer != null)
     return Container(
       child: Row(
         children: <Widget>[
@@ -86,6 +87,7 @@ class BuildLecturer extends StatelessWidget {
         ],
       ),
     );
+    else return Container();
   }
 }
 
