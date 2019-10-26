@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LectureRoute.dart';
 
-/*
-Need to do:
-Center the the start and the end time
-Alignment the title to start
-
-
- */
-
 class DayRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -55,6 +47,7 @@ Widget buildContent(LectureCard card) {
   );
 }
 
+//if lecture have lecturer add him to the card else it just some event and return empty container
 Widget buildLecturer(Lecturer lecturer) {
   if (lecturer != null && lecturer.name != null)
     return Container(
@@ -82,41 +75,42 @@ GestureDetector makeGestureDetector(LectureCard card, BuildContext context) =>
           ),
         );
       },
-      child: Card(
-        child: Row(
-          textDirection: TextDirection.ltr,
-          children: <Widget>[
-            Flexible(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Column(children: <Widget>[
-                    Text(card.startTime, style: TextStyle(fontSize: 15.0)),
-                    Text(card.endTime, style: TextStyle(fontSize: 15.0)),
-                  ]),
-                  Container(
-                    width: 8,
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Column(children: <Widget>[
-                      Text(
-                        card.lecture,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      buildContent(card),
-                    ]),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+      child: makeCard(card),
     );
+
+Card makeCard(LectureCard card) => Card(
+  child: Padding(
+    padding: EdgeInsets.all(10.0),
+    child: Row(
+      textDirection: TextDirection.ltr,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(children: <Widget>[
+          Text(card.startTime, style: TextStyle(fontSize: 15.0)),
+          Text(card.endTime, style: TextStyle(fontSize: 15.0)),
+        ]),
+        Container(
+          width: 8,
+        ),
+        Expanded(
+          child: Column(//add the text of the card
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                card.lecture,
+                maxLines: 1,
+                style: TextStyle(
+                    fontSize: 20.0, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+              buildContent(card),
+            ],
+          ),
+        )
+      ],
+    ),
+  ),
+);
 
 //data for test
 List<LectureCard> lectureCards = [
