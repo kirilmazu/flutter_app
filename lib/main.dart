@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
-import 'package:flutter_app/Data.dart';
+import 'package:flutter_app/Communication.dart';
 import 'package:flutter_app/LoginRoute.dart';
 import 'package:flutter_app/NoteRoute.dart';
 import 'package:flutter_app/ConferenceRoute.dart';
@@ -159,4 +159,4 @@ Card makeCard(ConferenceCard card) => Card(
 );
 
 //gat the data from flutter_app/Data.dart
-List<ConferenceCard> conferenceCards = GetData.getConferenceCards();
+List<ConferenceCard> conferenceCards = Communication.getConferenceCards();

@@ -19,6 +19,9 @@ class LecturerRout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
             Text(lecturer.name, style: TextStyle(fontSize: 20.0,),),
+            Text(lecturer.company + ',' + lecturer.role, style: TextStyle(fontSize: 20.0,),),
+            Divider(color: Colors.indigo,),
+            Text(lecturer.cv, style: TextStyle(fontSize: 20.0,),),
           ]
 
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LectureRoute.dart';
+import 'package:flutter_app/Communication.dart';
 
 class DayRoute extends StatelessWidget {
   @override
@@ -41,25 +42,40 @@ Widget buildContent(LectureCard card) {
             Text(card.place, style: TextStyle(fontSize: 18.0)),
           ],
         ),
-        buildLecturer(card.lecturer),
+        buildLecturersRow(card.lecturers),
       ],
     ),
   );
 }
 
 //if lecture have lecturer add him to the card else it just some event and return empty container
-Widget buildLecturer(Lecturer lecturer) {
-  if (lecturer != null && lecturer.name != null)
+Widget buildLecturersRow(List<Lecturer> lecturers) {
+  if (lecturers != null && lecturers.isNotEmpty)
     return Container(
       child: Row(
         children: <Widget>[
           Icon(Icons.person),
-          Text(lecturer.name, style: TextStyle(fontSize: 18.0)),
+          buildLecturers(lecturers),
         ],
       ),
     );
   else
     return Container();
+
+
+}
+
+Widget buildLecturers(List<Lecturer> lecturers) {
+  return Container(
+    child: ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: lectureCards.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Text(lecturers[index].name, style: TextStyle(fontSize: 18.0));
+      },
+    ),
+  );
 }
 
 //make the card clickable
@@ -113,60 +129,4 @@ Card makeCard(LectureCard card) => Card(
 );
 
 //data for test
-List<LectureCard> lectureCards = [
-  LectureCard(
-    lectureId: 1,
-    startTime: "08:00",
-    endTime: "09:00",
-    lecture: "Registration",
-    place: "First place",
-    description: "Some description",
-  ),
-  LectureCard(
-    lectureId: 2,
-    startTime: "09:00",
-    endTime: "11:00",
-    lecture: "Lecture 1",
-    lecturer: new Lecturer(name: "Lecturer 1"),
-    place: "Place 1",
-    description:
-        "Some description, and this one is a very long one, and it need to take fuul page\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nthe end\n",
-  ),
-  LectureCard(
-    lectureId: 3,
-    startTime: "09:00",
-    endTime: "11:00",
-    lecture: "Lecture 2",
-    lecturer: new Lecturer(name: "Lecturer 2"),
-    place: "Place 2",
-    description: "Some description",
-  ),
-  LectureCard(
-    lectureId: 4,
-    startTime: "11:00",
-    endTime: "13:00",
-    lecture:
-        "Lecture with along name, for test long name as it can be in the academy, with a few lins",
-    //lecture: "Lecture 3",
-    lecturer: new Lecturer(name: "Lecturer 1"),
-    place: "Place 1",
-    description: "Some description",
-  ),
-  LectureCard(
-    lectureId: 5,
-    startTime: "13:00",
-    endTime: "14:00",
-    lecture: "Lanch",
-    place: "Place 3",
-    description: "Some description",
-  ),
-  LectureCard(
-    lectureId: 6,
-    startTime: "14:00",
-    endTime: "16:00",
-    lecturer: new Lecturer(name: "Lecturer 3"),
-    lecture: "Lecture 4",
-    place: "Place 1",
-    description: "Some description",
-  ),
-];
+List<LectureCard> lectureCards = Communication.getLectureCards();
