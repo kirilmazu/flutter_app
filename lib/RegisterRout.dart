@@ -1,10 +1,16 @@
+import 'dart:async' as prefix0;
+
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:async';
+//import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 
 class RegisterRout extends StatelessWidget {
-  final userNameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final fullNameController = TextEditingController();
+  final companyController = TextEditingController();
   final emailController = TextEditingController();
   final roleController = TextEditingController();
 
@@ -20,9 +26,8 @@ class RegisterRout extends StatelessWidget {
         child: Column(
           children: <Widget> [
             buildTextField("Email", emailController),
-            buildTextField("User name", userNameController),
-            buildTextField("Password", passwordController),
-            buildTextField("Confirm password", confirmPasswordController),
+            buildTextField("Full name", fullNameController),
+            buildTextField("Company", companyController),
             buildTextField("Role", roleController),
             Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -62,10 +67,11 @@ class RegisterRout extends StatelessWidget {
         child: RaisedButton(
           child: Text("Register"),
           onPressed: (){
-            if(userNameController.text != "" && passwordController.text != ""){
-              //if the user or password empty show message
+            if(emailController.text != "" && fullNameController.text != "" && companyController.text != "" && roleController.text != ""){
+              //if all the fild filled
+
             }else{
-              //check user name and password
+              //check user na
 
               //login
 
@@ -94,3 +100,33 @@ class RegisterRout extends StatelessWidget {
     );
   }
 }
+
+/*
+class Storage{
+  Future<String> get localPath async{
+    final dir = await
+    return dir.path;
+  }
+
+  Future<File> get localFile async{
+    final path = await localPath;
+    return File('$path/user.txt');
+  }
+
+  Future<String> readData() async{
+    try{
+      final file = await localFile;
+      String body = await file.readAsString();
+
+      return body;
+    }catch(e){
+      return e.toString();
+    }
+  }
+
+  Future<File> writeData(String data) async{
+    final file = await localFile;
+    return file.writeAsString("$data");
+  }
+
+}*/
