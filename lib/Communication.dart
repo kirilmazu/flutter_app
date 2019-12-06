@@ -9,4 +9,12 @@ class Communication{
   static List<LectureCard> getLectureCards(){
     return GetTestData.getLectureCards();
   }
+
+  static void registerToConference(int conferenceID){
+    User user = currentUser;
+  }
+
+  static void registerToLecture(int lectureID){
+    User user = currentUser;
+  }
 }

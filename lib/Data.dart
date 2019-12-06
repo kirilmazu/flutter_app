@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 
+
 class GetTestData{
   static List<ConferenceCard> getConferenceCards(){
     return myConferenceCard;
@@ -12,6 +13,7 @@ class GetTestData{
     return myConferenceCard;
   }*/
 }
+
 
 //this data is for tests only.
 

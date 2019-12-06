@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Communication.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LecturerRoute.dart';
 
@@ -27,7 +28,7 @@ class LectureRout extends StatelessWidget{
             ),
             BuildTime(card: card,),
             BuildPlace(card: card,),
-            BuildLecturers(lecturers: card.lecturers),
+            //BuildLecturers(lecturers: card.lecturers),
             Divider(
               color: Colors.lightBlue,
             ),
@@ -37,7 +38,7 @@ class LectureRout extends StatelessWidget{
             Divider(
               color: Colors.lightBlue,
             ),
-            BuildButton(),
+            BuildButton(lectureId: card.lectureId,),
           ]
       ),
       ),
@@ -216,6 +217,9 @@ class BuildPlace extends StatelessWidget {
 
 class BuildButton extends StatelessWidget {
 
+  BuildButton({this.lectureId});
+  @required int lectureId;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -223,7 +227,7 @@ class BuildButton extends StatelessWidget {
       child: RaisedButton(
         child: Text("Add to planner"),
         onPressed: () {
-
+          Communication.registerToLecture(lectureId);
         },
       ),
     );

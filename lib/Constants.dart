@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+User currentUser;
 
 class Constants{
   static bool darkTeam = true;
@@ -22,7 +23,6 @@ const double imageW = 100;
 const double imageH = 75;
 
 class ConferenceCard{
-  //ConferenceCard({this.id, this.title, this.description, this.image, this.place, this.date});
   final int    conferenceID;
   final String title;       //conference name
   final String description;
