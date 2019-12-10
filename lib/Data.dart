@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 
 
@@ -9,9 +8,6 @@ class GetTestData{
   static List<LectureCard> getLectureCards(){
     return lectureCards;
   }
-  /*static List<ConferenceCard> getConferenceCards(){
-    return myConferenceCard;
-  }*/
 }
 
 
