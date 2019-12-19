@@ -50,6 +50,16 @@ List<Lecturer> lecturers1 = [
   ),
 ];
 
+List<Lecturer> lecturers0 = [
+Lecturer(
+id: 1,
+name: 'Lecturer name 1',
+company: 'Company 1',
+role: 'Role',
+cv: 'This is the CV of this lecturer',
+main: true,
+)];
+
 List<Lecturer> lecturers2 = [
   Lecturer(
     id: 1,
@@ -91,7 +101,7 @@ List<LectureCard> lectureCards = [
     startTime: "09:00",
     endTime: "11:00",
     lecture: "Lecture 1",
-    lecturers: lecturers1,
+    lecturers: lecturers0,
     place: "Place 1",
     description:
     "Some description, and this one is a very long one, and it need to take fuul page\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nv\nthe end\n",

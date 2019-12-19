@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/Communication.dart';
-import 'package:flutter_app/LoginRoute.dart';
+import 'package:flutter_app/RegisterRout.dart';
 import 'package:flutter_app/NoteRoute.dart';
 import 'package:flutter_app/ConferenceRoute.dart';
-import 'package:flutter_app/SettingsRout.dart';
 import 'package:flutter_app/AboutRout.dart';
 
 void main() => runApp(MyApp());
@@ -38,7 +37,6 @@ class MyHomePage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
-
   final String title;
 
   @override
@@ -88,16 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(builder: (context) => NoteRoute()),
       );
     }
-    else if(choice ==Constants.LogIn){
+    else if(choice ==Constants.Register){
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginRout()),
-      );
-    }
-    else if(choice ==Constants.Settings){
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SettingsRout()),
+        MaterialPageRoute(builder: (context) => RegisterRout()),
       );
     }
     else if(choice ==Constants.About){

@@ -5,7 +5,6 @@ import 'package:flutter_app/LecturerRoute.dart';
 
 
 class LectureRout extends StatelessWidget{
-
   final LectureCard card;
 
   LectureRout({Key key, @required this.card}):super(key: key);
@@ -28,7 +27,7 @@ class LectureRout extends StatelessWidget{
             ),
             BuildTime(card: card,),
             BuildPlace(card: card,),
-            //BuildLecturers(lecturers: card.lecturers),
+            buildLecturers(card.lecturers),
             Divider(
               color: Colors.lightBlue,
             ),
@@ -48,7 +47,6 @@ class LectureRout extends StatelessWidget{
 }
 
 class BuildTime extends StatelessWidget {
-
   BuildTime({this.card});
   @required final LectureCard card;
 
@@ -65,122 +63,7 @@ class BuildTime extends StatelessWidget {
   }
 }
 
-
-class BuildLecturers extends StatelessWidget {
-
-  BuildLecturers({this.lecturers});
-  @required final List<Lecturer> lecturers;
-
-  @override
-  Widget build(BuildContext context) {
-    if (lecturers != null && lecturers.isNotEmpty)
-      return Container(
-        child: Row(
-          children: <Widget>[
-            Icon(Icons.person),
-            buildLecturers(lecturers),
-          ],
-        ),
-      );
-    else return Container();
-  }
-
-}
-
-Widget buildLecturers(List<Lecturer> lecturers) {
-  return Container(
-    child: ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: lecturers.length,
-      itemBuilder: (BuildContext context, int index) {
-        return BuildLecturer(lecturer: lecturers[index],);
-      },
-    ),
-  );
-}
-
-class BuildLecturer extends StatelessWidget {
-
-  BuildLecturer({this.lecturer});
-  @required final Lecturer lecturer;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child:InkWell(
-        child: Text(lecturer.name, style: TextStyle(fontSize: 20.0),),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => LecturerRout(lecturer: lecturer,)),
-            );
-          }),
-      );
-  }
-}
-
-/*
-class BuildLecturer extends StatelessWidget {
-
-  BuildLecturer({this.lecturer});
-  @required final Lecturer lecturer;
-
-
-  @override
-  Widget build(BuildContext context) {
-    if(lecturer != null)
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Icon(Icons.person),
-          InkWell(
-            child: Text(lecturer.name, style: TextStyle(fontSize: 20.0),),
-            onTap: (){Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LecturerRout(lecturer: lecturer,)),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-    else return Container();
-  }
-}
-
-Widget buildLecturersRow(List<Lecturer> lecturers) {
-  if (lecturers != null && lecturers.isNotEmpty)
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Icon(Icons.person),
-          buildLecturers(lecturers),
-        ],
-      ),
-    );
-  else
-    return Container();
-
-
-}
-
-Widget buildLecturers(List<Lecturer> lecturers) {
-  return Container(
-    child: ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: lecturers.length,
-      itemBuilder: (BuildContext context, int index) {
-        return BuildLecturer(lecturer: lecturers[index],);
-      },
-    ),
-  );
-}*/
-
 class BuildDescription extends StatelessWidget {
-
   BuildDescription({this.card});
   @required final LectureCard card;
 
@@ -198,7 +81,6 @@ class BuildDescription extends StatelessWidget {
 }
 
 class BuildPlace extends StatelessWidget {
-
   BuildPlace({this.card});
   @required final LectureCard card;
 
@@ -216,9 +98,8 @@ class BuildPlace extends StatelessWidget {
 }
 
 class BuildButton extends StatelessWidget {
-
   BuildButton({this.lectureId});
-  @required int lectureId;
+  @required final int lectureId;
 
   @override
   Widget build(BuildContext context) {
@@ -231,5 +112,62 @@ class BuildButton extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+Widget buildLecturers(List<Lecturer> lecturers) {
+  if(lecturers != null && lecturers.isNotEmpty) return Container(
+    child: ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: lecturers.length,
+      itemBuilder: (BuildContext context, int index) {
+        return BuildLecturer(lecturer: lecturers[index],);
+      },
+    ),
+  );
+  else return Container();
+}
+
+class BuildLecturer extends StatelessWidget {
+  BuildLecturer({this.lecturer});
+
+  @required final Lecturer lecturer;
+
+  @override
+  Widget build(BuildContext context) {
+    if (lecturer != null)
+      return Container(
+        child: InkWell(
+            child: Row(
+              children: <Widget>[
+                icon(lecturer),
+                text(lecturer),
+              ],),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LecturerRout(lecturer: lecturer,)),
+              );
+            }),
+      );
+    else
+      return Container();
+  }
+
+  Widget icon(Lecturer lecturer) {
+    if (lecturer.main)
+      return Icon(Icons.person);
+    else
+      return Icon(Icons.person_outline);
+  }
+
+  Widget text(Lecturer lecturer) {
+    if (lecturer.main)
+      return Text(lecturer.name,
+        style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),);
+    else
+      return Text(lecturer.name, style: TextStyle(fontSize: 20.0),);
   }
 }
