@@ -43,9 +43,6 @@ class ConferenceRoute extends StatelessWidget{
   }
 
   Container makeCards(ConferenceCard conferenceCard){
-    for(Lecture lecture in card.lectures){
-      print(lecture.lectureName);
-    }
     return Container(
       child: ListView.builder(
           scrollDirection: Axis.vertical,
