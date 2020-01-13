@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/Communication.dart';
+import 'package:flutter_app/Constants.dart';
+import 'package:flutter_app/Data.dart';
 import 'package:flutter_app/RegisterRout.dart';
 import 'package:flutter_app/NoteRoute.dart';
 import 'package:flutter_app/ConferenceRoute.dart';
 import 'package:flutter_app/AboutRout.dart';
+import 'package:flutter_app/TestsRout.dart';
+import 'package:flutter_app/LoadRout.dart';
+import 'Communication.dart';
 
-void main() => runApp(MyApp());
+
+void main() async{
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  Brightness brightness;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -21,12 +27,15 @@ class MyApp extends StatelessWidget {
         // This is the theme of your application.
         primaryColor: Colors.lightBlue[900], //the color of the phone up bar
         accentColor: Colors.lightBlue[800], //the color of the appbar
-        brightness: Constants.brightness,//Brightness.dark,
-
-        // Define the default font family.
+        brightness: Brightness.dark,
+        //brightness: Brightness.light,
         fontFamily: 'Montserrat',
       ),
-      home: MyHomePage(title: 'App Home Page'),
+      /*darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        backgroundColor: Color(0x50f0f0f0),
+      ),*/
+      home: MyHomePage(title: 'App Home Page'), //TODO: change hadar
     );
   }
 }
@@ -47,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -71,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView( //make a list of all conferenceCards we get
         child: Column(
           children: <Widget>[
-            makeCards,
+            CardsList(),
           ],
         ),
       )
@@ -98,20 +106,55 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(builder: (context) => AboutRout()),
       );
     }
+    else if(choice ==Constants.Tests){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TestsRout()),
+      );
+    }
+  }
+}
+
+//make list of clickable cards from conferenceCards list
+class CardsList extends StatefulWidget {
+  final bool loaded = MyData.loaded;
+  @override
+  _CardsList createState() => _CardsList();
+}
+
+class _CardsList extends State<CardsList> {
+  List<ConferenceCard> _cards;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoadRout()),
+    ));
+    setState(() {
+      _cards = Communication.getConferenceCards();
+    });
   }
 
-  //make list of clickable cards from conferenceCards list
-  final makeCards = Container(
-    child: ListView.builder( //build list of items
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView.builder( //build list of items
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: conferenceCards.length,
-        itemBuilder: (BuildContext context, int index){
-          return makeGestureDetector(conferenceCards[index],context); // build list of conferenceCards
+        itemCount: _cards.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return makeGestureDetector(_cards[index],
+              context); // build list of conferenceCards
         },
-    ),
-  );
+      ),
+    );
+  }
 }
+
 
 //make the card clickable
 GestureDetector makeGestureDetector(ConferenceCard card, BuildContext context) => GestureDetector(
@@ -130,7 +173,12 @@ Card makeCard(ConferenceCard card) => Card(
       textDirection: TextDirection.ltr,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        card.image,//add image to the card
+    FadeInImage.assetNetwork(//add image to the card
+      placeholder: defaultImage,
+      image: card.imageUrl,
+        height: imageW,
+        width: imageW,
+    ),
         Container(//make space between the image and the text
           width: 8,
         ),
@@ -151,4 +199,4 @@ Card makeCard(ConferenceCard card) => Card(
 );
 
 //gat the data from flutter_app/Data.dart
-List<ConferenceCard> conferenceCards = Communication.getConferenceCards();
+//List<ConferenceCard> conferenceCards = Communication.getConferenceCards();

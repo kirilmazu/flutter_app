@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 
+//TODO: fix or remove
+
 List<Note> allNotes = [
   Note(subject: 'subject for test 1', body: 'This is the body of the first nete for test'),
   Note(subject: 'subject for test 2', body: 'This is the body of the second nete for test'),

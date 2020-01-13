@@ -5,7 +5,7 @@ import 'package:flutter_app/LecturerRoute.dart';
 
 
 class LectureRout extends StatelessWidget{
-  final LectureCard card;
+  final Lecture card;
 
   LectureRout({Key key, @required this.card}):super(key: key);
 
@@ -48,7 +48,7 @@ class LectureRout extends StatelessWidget{
 
 class BuildTime extends StatelessWidget {
   BuildTime({this.card});
-  @required final LectureCard card;
+  @required final Lecture card;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class BuildTime extends StatelessWidget {
 
 class BuildDescription extends StatelessWidget {
   BuildDescription({this.card});
-  @required final LectureCard card;
+  @required final Lecture card;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class BuildDescription extends StatelessWidget {
 
 class BuildPlace extends StatelessWidget {
   BuildPlace({this.card});
-  @required final LectureCard card;
+  @required final Lecture card;
 
   @override
   Widget build(BuildContext context) {

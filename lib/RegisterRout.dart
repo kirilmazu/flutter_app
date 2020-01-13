@@ -1,13 +1,14 @@
-import 'dart:async' as prefix0;
-
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
-//import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-
+//TODO: save data to file
+//TODO: get data from file
+//TODO: return to same route
+//TODO: check the import
 class RegisterRout extends StatelessWidget {
   final fullNameController = TextEditingController();
   final companyController = TextEditingController();
@@ -101,10 +102,10 @@ class RegisterRout extends StatelessWidget {
   }
 }
 
-/*
+
 class Storage{
   Future<String> get localPath async{
-    final dir = await
+    final dir = await getApplicationDocumentsDirectory();
     return dir.path;
   }
 
@@ -129,4 +130,4 @@ class Storage{
     return file.writeAsString("$data");
   }
 
-}*/
+}

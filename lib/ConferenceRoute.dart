@@ -28,59 +28,63 @@ class ConferenceRoute extends StatelessWidget{
                   Text(card.date, style: TextStyle(fontSize: 18.0)),
                   Text(card.place, style: TextStyle(fontSize: 18.0)),
                   Text(card.title, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
-                  Text(card.description,),
+                  Text(card.description,),//TODO: check with long one
                   Divider(
                     color: Colors.indigo,
                   ),
                   BuildButton(conferenceId: card.conferenceID,),
                   //the conference lectures:
-                  makeCards,
+                  //makeCards,//TODO: make it scrollable
+                  makeCards(card),
                 ],
               ),
       ),
     );
   }
 
-  final makeCards = Container(
-    child: ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: lectureCards.length,
+  Container makeCards(ConferenceCard conferenceCard){
+    for(Lecture lecture in card.lectures){
+      print(lecture.lectureName);
+    }
+    return Container(
+      child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: card.lectures.length, //lectureCards.length,
+          physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
-        return makeGestureDetector(lectureCards[index], context);
+        return makeGestureDetector(card.lectures[index], context);
       },
     ),
-  );
-
+    );
+  }
 }
 
-GestureDetector makeGestureDetector(LectureCard card, BuildContext context) =>
+GestureDetector makeGestureDetector(Lecture card, BuildContext context) =>
     GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => LectureRout(
-                card: card,
-              )
-          ),
+          MaterialPageRoute(builder: (context) => LectureRout(card: card,)),
         );
       },
       child: makeCard(card),
     );
 
-Card makeCard(LectureCard card) => Card(
+//todo: show parallel lectures
+
+Card makeCard(Lecture card) => Card(
   child: Padding(
     padding: EdgeInsets.all(10.0),
     child: Row(
       textDirection: TextDirection.ltr,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Column(children: <Widget>[
+        Column(children: <Widget>[//print time
           Text(card.startTime, style: TextStyle(fontSize: 15.0)),
           Text(card.endTime, style: TextStyle(fontSize: 15.0)),
         ]),
-        Container(
+        Container(//Divider
           width: 8,
         ),
         Expanded(
@@ -112,9 +116,9 @@ Card makeCard(LectureCard card) => Card(
   ),
 );
 
-String lecturers = "";
 
-Widget buildLecturers(LectureCard lecture){
+Widget buildLecturers(Lecture lecture){
+  String lecturers = "";
   if(lecture != null && lecture.lecturers != null && lecture.lecturers.isNotEmpty){
     for(int i =0;i < lecture.lecturers.length; i++){
       if(i != 0) lecturers += ", ";
@@ -135,7 +139,6 @@ Widget buildLecturers(LectureCard lecture){
 }
 
 class BuildButton extends StatelessWidget {
-
   BuildButton({this.conferenceId});
   @required final int conferenceId;
 
@@ -152,6 +155,3 @@ class BuildButton extends StatelessWidget {
     );
   }
 }
-
-//data for test
-List<LectureCard> lectureCards = Communication.getLectureCards();
