@@ -18,8 +18,11 @@ class Communication{
     return GetTestData.getLectureCards();
   }
 
-  static void registerToConference(int conferenceID){
+  static Future<void> registerToConference(String conferenceName) async {
     User user = currentUser;
+    //todo implement
+
+
   }
 
   static void registerToLecture(int lectureID){
@@ -56,17 +59,6 @@ class DataBaseCommunication{
     return results;
   }
 
-  ///Load all date from the server database
-  /*static void loadData(bool loadAll){
-    loadLecturers().then((result) {
-      loadLecture().then((result) {
-        loadConference(loadAll).then((result) {
-          return;
-        });
-      });
-    });
-  }*/
-
   static Future<List<ConferenceCard>> loadData(bool loadAll) async {
     final res = await loadLecturers();
     final res2 = await loadLecture();
@@ -82,7 +74,7 @@ class DataBaseCommunication{
     Results results = await DataBaseCommunication.runQuery(myQuery);
     ConferenceCard conferenceCard;
     for(var row in results) {
-      conferenceCard = new ConferenceCard(3, row[DataBaseConstant.conferenceNameColumn],
+      conferenceCard = new ConferenceCard(0, row[DataBaseConstant.conferenceNameColumn],
         row[DataBaseConstant.conferenceDescriptionColumn],
         row[DataBaseConstant.conferenceImageColumn],
         row[DataBaseConstant.conferenceLocationColumn],
@@ -106,7 +98,6 @@ class DataBaseCommunication{
         lectureName: row[DataBaseConstant.lectureNameColumn],
         startTime: row[DataBaseConstant.lectureStartColumn],
         endTime: row[DataBaseConstant.lectureEndColumn],
-        lecture: row[DataBaseConstant.lectureLocationColumn],
         place: row[DataBaseConstant.lectureLocationColumn],
         description: row[DataBaseConstant.lectureDescriptionColumn],
         file: row[DataBaseConstant.lectureFileColumn],
@@ -125,7 +116,8 @@ class DataBaseCommunication{
     Lecturer lecturer;
     Image image;
     for(var row in results){
-      if(row[DataBaseConstant.lecturerImageColumn] != null) {//check image
+      //todo fix image
+      /*if(row[DataBaseConstant.lecturerImageColumn] != null) {//check image
         try {
           image = Image.network(
             row[DataBaseConstant.lecturerImageColumn],
@@ -135,7 +127,8 @@ class DataBaseCommunication{
         } on Exception catch (exception) {
           image = Image.asset(defaultImage, width: imageW, height: imageH,);
         }
-      }else image = Image.asset(defaultImage, width: imageW, height: imageH,);
+      }else image = Image.asset(defaultImage, width: imageW, height: imageH,);*/
+      image = Image.asset(defaultImage, width: imageW, height: imageH,);
       //get Lecture
       lecturer = new Lecturer(
           id: 1,
@@ -152,5 +145,25 @@ class DataBaseCommunication{
     }
     return true;
   }
+/*
+  static Future<void> insertUser(User user) async{
+    var myConnection = await connection;
+    //insert the user
+    var results = await myConnection.query("insert inte " + DataBaseConstant.userTableName
+        + "(FullName, Company, Role, Email) values (?, ?, ?, ?)", [user.fullName, user.company, user.role, user.email]);
+
+    //close the connection
+    await myConnection.close();
+  }
+
+  static Future<void> insertParticipants(User user, String conferenceName) async{
+    var myConnection = await connection;
+    //insert the user
+    var results = await myConnection.query("insert inte " + DataBaseConstant.participantsTableName
+        + "(FullName, Company, Role, Email) values (?, ?, ?, ?)", [user.email, conferenceName]);
+
+    //close the connection
+    await myConnection.close();
+  }*/
 
 }

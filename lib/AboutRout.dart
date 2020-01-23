@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Constants.dart';
 
 class AboutRout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: Text("About this app"),
       ),
 
       body: Column(
@@ -25,7 +26,7 @@ class AboutRout extends StatelessWidget {
                 color: Colors.indigo,
               ),
               Text("Version: 1.0"),
-              Text("And mere.....\nAnd it can to be long one\nSo just add atext hear."),
+              Text(Constants.aboutText),
             ]),
           ),
         ],
@@ -33,3 +34,4 @@ class AboutRout extends StatelessWidget {
     );
   }
 }
+

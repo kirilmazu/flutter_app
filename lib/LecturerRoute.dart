@@ -15,7 +15,8 @@ class LecturerRout extends StatelessWidget {
         title: Text(lecturer.name),
       ),
 
-      body: Column(//TODO: check all for long text
+      body: SingleChildScrollView(
+        child: Column(//TODO: check all for long text
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
             FadeInImage.assetNetwork(//add image to the card
@@ -30,6 +31,7 @@ class LecturerRout extends StatelessWidget {
             Text(lecturer.cv, style: TextStyle(fontSize: 20.0,),),
           ]
 
+      ),
       ),
     );
   }

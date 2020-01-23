@@ -20,7 +20,7 @@ class LectureRout extends StatelessWidget{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(card.lecture,
+            Text(card.lectureName,
               style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold),),
             Divider(
               color: Colors.lightBlue,
@@ -37,7 +37,7 @@ class LectureRout extends StatelessWidget{
             Divider(
               color: Colors.lightBlue,
             ),
-            BuildButton(lectureId: card.lectureId,),
+            //BuildButton(lectureId: card.lectureId,),
           ]
       ),
       ),

@@ -27,14 +27,14 @@ class MyApp extends StatelessWidget {
         // This is the theme of your application.
         primaryColor: Colors.lightBlue[900], //the color of the phone up bar
         accentColor: Colors.lightBlue[800], //the color of the appbar
-        brightness: Brightness.dark,
-        //brightness: Brightness.light,
+        //brightness: Brightness.dark,
+        brightness: Brightness.light,
         fontFamily: 'Montserrat',
       ),
-      /*darkTheme: ThemeData(
+      darkTheme: ThemeData(
         brightness: Brightness.dark,
         backgroundColor: Color(0x50f0f0f0),
-      ),*/
+      ),
       home: MyHomePage(title: 'App Home Page'), //TODO: change hadar
     );
   }
@@ -86,12 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  //move to relevant page after the user select option in the three dots menu in the appbar
+  ///move to relevant page after the user select option in the three dots menu in the appbar
   void choiceAction(String choice){
     if(choice == Constants.Notes){
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => NoteRoute()),
+        MaterialPageRoute(builder: (context) => NoteRoute()),//todo: remove it
       );
     }
     else if(choice ==Constants.Register){
@@ -109,13 +109,13 @@ class _MyHomePageState extends State<MyHomePage> {
     else if(choice ==Constants.Tests){
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TestsRout()),
+        MaterialPageRoute(builder: (context) => TestsRout()),//todo: remove it
       );
     }
   }
 }
 
-//make list of clickable cards from conferenceCards list
+///make list of clickable cards from conferenceCards list
 class CardsList extends StatefulWidget {
   final bool loaded = MyData.loaded;
   @override
@@ -187,8 +187,8 @@ Card makeCard(ConferenceCard card) => Card(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(card.date, style: TextStyle(fontSize: 10.0)),//the first line is the date
-              Text(card.place, style: TextStyle(fontSize: 10.0)),//the second line is the location
-              Text(card.title, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),), //the threes line is conference name
+              Text(card.place, style: TextStyle(fontSize: 10.0),maxLines: 1, overflow:  TextOverflow.ellipsis,),//the second line is the location
+              Text(card.title, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold), maxLines: 1, overflow:  TextOverflow.ellipsis,), //the threes line is conference name
               Text(card.description, maxLines: 2, overflow:  TextOverflow.ellipsis, ), //the fourth line is one or two lines of description
             ],
           ),

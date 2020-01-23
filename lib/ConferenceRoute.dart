@@ -4,140 +4,64 @@ import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LectureRoute.dart';
 import 'package:flutter_app/Communication.dart';
 
+ConferenceCard conferenceCard;
 
-class ConferenceRoute extends StatelessWidget{
-
+class ConferenceRoute extends StatelessWidget {
   final ConferenceCard card;
 
-  ConferenceRoute({Key key, @required this.card}):super(key: key);
+  ConferenceRoute({Key key, @required this.card}) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
-
+  Widget build(BuildContext context) {
+    card.sortLectures();
+    conferenceCard = card;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Conference name"),
+        title: Text("Conference"), //todo change it
       ),
-
       body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  //the conference data:
-                  Center( child: card.image,),
-                  Text(card.date, style: TextStyle(fontSize: 18.0)),
-                  Text(card.place, style: TextStyle(fontSize: 18.0)),
-                  Text(card.title, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
-                  Text(card.description,),//TODO: check with long one
-                  Divider(
-                    color: Colors.indigo,
-                  ),
-                  BuildButton(conferenceId: card.conferenceID,),
-                  //the conference lectures:
-                  //makeCards,//TODO: make it scrollable
-                  makeCards(card),
-                ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            //the conference data:
+            Center(
+              child: FadeInImage.assetNetwork(
+                //add image to the card
+                placeholder: defaultImage,
+                image: card.imageUrl,
               ),
-      ),
-    );
-  }
-
-  Container makeCards(ConferenceCard conferenceCard){
-    return Container(
-      child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: card.lectures.length, //lectureCards.length,
-          physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        return makeGestureDetector(card.lectures[index], context);
-      },
-    ),
-    );
-  }
-}
-
-GestureDetector makeGestureDetector(Lecture card, BuildContext context) =>
-    GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LectureRout(card: card,)),
-        );
-      },
-      child: makeCard(card),
-    );
-
-//todo: show parallel lectures
-
-Card makeCard(Lecture card) => Card(
-  child: Padding(
-    padding: EdgeInsets.all(10.0),
-    child: Row(
-      textDirection: TextDirection.ltr,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Column(children: <Widget>[//print time
-          Text(card.startTime, style: TextStyle(fontSize: 15.0)),
-          Text(card.endTime, style: TextStyle(fontSize: 15.0)),
-        ]),
-        Container(//Divider
-          width: 8,
-        ),
-        Expanded(
-          child: Column(//add the text of the card
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              //the lecture name:
-              Text(
-                card.lecture,
-                maxLines: 1,
-                style: TextStyle(
-                    fontSize: 20.0, fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
-              ),
-              //the location:
-              Row(
-                children: <Widget>[
-                  Icon(Icons.location_on),
-                  Text(card.place, style: TextStyle(fontSize: 18.0), maxLines: 1, overflow: TextOverflow.ellipsis,),
-                ],
-              ),
-              //the lecturers:
-              buildLecturers(card),
-            ],
-          ),
-        )
-      ],
-    ),
-  ),
-);
-
-
-Widget buildLecturers(Lecture lecture){
-  String lecturers = "";
-  if(lecture != null && lecture.lecturers != null && lecture.lecturers.isNotEmpty){
-    for(int i =0;i < lecture.lecturers.length; i++){
-      if(i != 0) lecturers += ", ";
-      lecturers += lecture.lecturers[i].name;
-    }
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Flexible(
-            fit: FlexFit.loose,
-            child:  Text(lecturers, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 18.0), softWrap: false, )
-          ),
+            ),
+            Text(card.date, style: TextStyle(fontSize: 18.0)),
+            Text(
+              card.place,
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Text(
+              card.title,
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              card.description,
+            ), //TODO: check with long one
+            Divider(
+              color: Colors.indigo,
+            ),
+            BuildButton(
+              conferenceName: card.title,
+            ),
+            //the conference lectures:
+            CardsList(),
           ],
+        ),
       ),
     );
-  }else return Container();
+  }
 }
 
-class BuildButton extends StatelessWidget {
-  BuildButton({this.conferenceId});
-  @required final int conferenceId;
+class BuildButton extends StatelessWidget {//todo: replace it
+  BuildButton({this.conferenceName});
+  @required
+  final String conferenceName;
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +70,222 @@ class BuildButton extends StatelessWidget {
       child: RaisedButton(
         child: Text("Add to planner"),
         onPressed: () {
-          Communication.registerToConference(conferenceId);
+          Communication.registerToConference(conferenceName);
         },
       ),
     );
   }
 }
+
+class BuildStatefulButton extends StatefulWidget {
+  @override
+  _BuildStatefulButton createState() => _BuildStatefulButton();
+}
+
+class _BuildStatefulButton extends State<BuildStatefulButton> {
+  _BuildStatefulButton({this.conferenceName});
+  @required
+  final String conferenceName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: AlignmentDirectional.centerEnd,
+      child: RaisedButton(
+        child: Text("Add to planner"),
+        onPressed: () {
+          Communication.registerToConference(conferenceName);
+          //todo: change text on press
+        },
+      ),
+    );
+  }
+}
+
+
+class CardsList extends StatefulWidget {
+  final ConferenceCard card = conferenceCard;
+
+  @override
+  _CardsList createState() => _CardsList(card);
+}
+
+class _CardsList extends State<CardsList> {
+  ConferenceCard card;
+  List<Lecture> cards;
+  _CardsList(this.card);
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      cards = conferenceCard.lectures;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: new ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: cards.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return makeGestureDetector(cards[index],context, update);
+        },
+      ),
+    );
+  }
+
+  void update(){
+    setState(() {
+      cards = conferenceCard.lectures;
+    });
+  }
+}
+
+GestureDetector makeGestureDetector(Lecture card, BuildContext context, var update) =>
+    GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LectureRout(card: card,)),
+        );
+      },
+      child: makeCard(card, update),
+    );
+
+Card makeCard(Lecture card, var update) => Card(
+  child: Padding(
+    padding: EdgeInsets.all(10.0),
+    child: Row(
+      textDirection: TextDirection.ltr,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(children: <Widget>[
+          //print time
+          Text(card.startTime, style: TextStyle(fontSize: 15.0)),
+          Text(card.endTime, style: TextStyle(fontSize: 15.0)),
+        ]),
+        Container(
+          //Divider
+          width: 8,
+        ),
+        Expanded(
+          child: Column(
+            //add the text of the card
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              //the lecture name:
+              Text(
+                card.lectureName,
+                maxLines: 1,
+                style:
+                TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
+              //the location
+
+              Row(
+                children: <Widget>[
+                  Icon(Icons.location_on),
+                  Flexible(
+                    child: Text(
+                      card.place,
+                      style: TextStyle(fontSize: 18.0),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    ),
+                  ),
+                  //Text(card.place, style: TextStyle(fontSize: 18.0), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,),
+                ],
+              ),
+              //the lecturers:
+              buildLecturers(card),
+            ],
+          ),
+        ),
+        BuildTabButton(lecture: card, update: update,)
+      ],
+    ),
+  ),
+);
+
+Widget buildLecturers(Lecture lecture) {
+  String lecturers = "";
+  if (lecture != null &&
+      lecture.lecturers != null &&
+      lecture.lecturers.isNotEmpty) {
+    for (int i = 0; i < lecture.lecturers.length; i++) {
+      if (i != 0) lecturers += ", ";
+      lecturers += lecture.lecturers[i].name;
+    }
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Flexible(
+              fit: FlexFit.loose,
+              child: Text(
+                lecturers,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 18.0),
+                softWrap: false,
+              )
+          ),
+        ],
+      ),
+    );
+  } else
+    return Container();
+}
+
+class BuildTabButton extends StatelessWidget {
+  BuildTabButton({this.lecture, this.update});
+
+  @required
+  final Lecture lecture;
+  final update;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!haveParallel(lecture)) return Container();
+    return Container(
+      alignment: AlignmentDirectional.centerEnd,
+      child: RaisedButton(
+        child: Icon(Icons.compare_arrows),
+        onPressed: () {
+          //todo: implement
+          changeToParallel();
+          conferenceCard.sortLectures();
+          update();
+        },
+      ),
+    );
+  }
+
+  bool haveParallel(Lecture lecture) {
+    for (Lecture pLecture in conferenceCard.parallelLectures) {
+      if (pLecture.startTime == lecture.startTime) return true;
+    }
+    return false;
+  }
+
+  void changeToParallel(){
+    for (Lecture pLecture in conferenceCard.parallelLectures) {
+      if (pLecture.startTime == lecture.startTime){
+        conferenceCard.parallelLectures.add(lecture);
+        conferenceCard.lectures.add(pLecture);
+        conferenceCard.parallelLectures.remove(pLecture);
+        conferenceCard.lectures.remove(lecture);
+        return;
+      }
+    }
+  }
+}
+
+
