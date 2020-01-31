@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Constants.dart';
 
-//TODO: fix or remove
-
+//TODO: remove
 List<Note> allNotes = [
   Note(subject: 'subject for test 1', body: 'This is the body of the first nete for test'),
   Note(subject: 'subject for test 2', body: 'This is the body of the second nete for test'),
-  Note(
-      subject: 'subject for test long note with long body',
-      body: 'This is the body of the very very very long nete for test it and see it work.\n and maby some more lines\n and more.'),
-  Note(subject: 'subject for test 4', body: 'This is the body of the 3 nete for test'),
 ];
 
 class NoteRoute extends StatelessWidget{

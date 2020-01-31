@@ -11,7 +11,6 @@ import 'package:flutter_app/TestsRout.dart';
 import 'package:flutter_app/LoadRout.dart';
 import 'Communication.dart';
 
-
 void main() async{
   runApp(MyApp());
 }
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
         // This is the theme of your application.
         primaryColor: Colors.lightBlue[900], //the color of the phone up bar
         accentColor: Colors.lightBlue[800], //the color of the appbar
-        //brightness: Brightness.dark,
         brightness: Brightness.light,
         fontFamily: 'Montserrat',
       ),
@@ -35,7 +33,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         backgroundColor: Color(0x50f0f0f0),
       ),
-      home: MyHomePage(title: 'App Home Page'), //TODO: change hadar
+      home: MyHomePage(title: 'Conference'),
     );
   }
 }
@@ -88,13 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ///move to relevant page after the user select option in the three dots menu in the appbar
   void choiceAction(String choice){
-    if(choice == Constants.Notes){
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NoteRoute()),//todo: remove it
-      );
-    }
-    else if(choice ==Constants.Register){
+    if(choice ==Constants.Register){
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => RegisterRout()),
@@ -106,18 +98,11 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(builder: (context) => AboutRout()),
       );
     }
-    else if(choice ==Constants.Tests){
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TestsRout()),//todo: remove it
-      );
-    }
   }
 }
 
 ///make list of clickable cards from conferenceCards list
 class CardsList extends StatefulWidget {
-  final bool loaded = MyData.loaded;
   @override
   _CardsList createState() => _CardsList();
 }
@@ -155,8 +140,7 @@ class _CardsList extends State<CardsList> {
   }
 }
 
-
-//make the card clickable
+///make the card clickable
 GestureDetector makeGestureDetector(ConferenceCard card, BuildContext context) => GestureDetector(
   onTap: (){Navigator.push( //on click move to ConferenceRoute with the conferenceCard data
     context,
@@ -165,7 +149,7 @@ GestureDetector makeGestureDetector(ConferenceCard card, BuildContext context) =
   child: makeCard(card),
 );
 
-//make the conferenceCard
+///make the conferenceCard
 Card makeCard(ConferenceCard card) => Card(
   child: Padding(
     padding: EdgeInsets.all(10.0),
@@ -197,6 +181,3 @@ Card makeCard(ConferenceCard card) => Card(
     ),
   ),
 );
-
-//gat the data from flutter_app/Data.dart
-//List<ConferenceCard> conferenceCards = Communication.getConferenceCards();

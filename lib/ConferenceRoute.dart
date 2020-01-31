@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LectureRoute.dart';
 import 'package:flutter_app/Communication.dart';
+import 'package:flutter_app/Data.dart';
+
+import 'RegisterRout.dart';
 
 ConferenceCard conferenceCard;
 
@@ -17,7 +20,7 @@ class ConferenceRoute extends StatelessWidget {
     conferenceCard = card;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Conference"), //todo change it
+        title: Text(card.title),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -46,9 +49,7 @@ class ConferenceRoute extends StatelessWidget {
             Divider(
               color: Colors.indigo,
             ),
-            BuildButton(
-              conferenceName: card.title,
-            ),
+            BuildStatefulButton(),
             //the conference lectures:
             CardsList(),
           ],
@@ -58,25 +59,7 @@ class ConferenceRoute extends StatelessWidget {
   }
 }
 
-class BuildButton extends StatelessWidget {//todo: replace it
-  BuildButton({this.conferenceName});
-  @required
-  final String conferenceName;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: AlignmentDirectional.centerEnd,
-      child: RaisedButton(
-        child: Text("Add to planner"),
-        onPressed: () {
-          Communication.registerToConference(conferenceName);
-        },
-      ),
-    );
-  }
-}
-
+///the planer button
 class BuildStatefulButton extends StatefulWidget {
   @override
   _BuildStatefulButton createState() => _BuildStatefulButton();
@@ -84,25 +67,66 @@ class BuildStatefulButton extends StatefulWidget {
 
 class _BuildStatefulButton extends State<BuildStatefulButton> {
   _BuildStatefulButton({this.conferenceName});
-  @required
-  final String conferenceName;
+  @required final String conferenceName;
+  Color buttonColor;
+  String buttonText;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      if(!conferenceCard.userAddToPlaner){
+        buttonColor = Colors.blueAccent;
+        buttonText = "Add to planner";
+      }else{
+        buttonColor = Colors.orange;
+        buttonText = "Remove from planer";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: AlignmentDirectional.centerEnd,
       child: RaisedButton(
-        child: Text("Add to planner"),
+        color: buttonColor,
+        child: Text(buttonText),
         onPressed: () {
-          Communication.registerToConference(conferenceName);
-          //todo: change text on press
+          //if the user not registered forward to register
+          if(currentUser == null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RegisterRout()),
+            );
+          }
+          //if register canceled
+          if(currentUser != null){
+            Communication.registerToConference(conferenceName);
+            toggleButton();
+          }
         },
       ),
     );
   }
+
+  ///switch the text and color of planner button
+  void toggleButton(){
+    setState(() {
+      if(buttonColor == Colors.blueAccent){
+        buttonColor = Colors.orange;
+        buttonText = "Remove from planer";
+      }
+      else{
+        buttonColor = Colors.blueAccent;
+        buttonText = "Add to planner";
+      }
+      MyData.toggleAddToPlanerStatus(conferenceCard);
+    });
+  }
 }
 
-
+///build list of cards of lectures
 class CardsList extends StatefulWidget {
   final ConferenceCard card = conferenceCard;
 
@@ -138,6 +162,7 @@ class _CardsList extends State<CardsList> {
     );
   }
 
+  ///function to update the cards from switch to parallel lecture button.
   void update(){
     setState(() {
       cards = conferenceCard.lectures;
@@ -145,6 +170,7 @@ class _CardsList extends State<CardsList> {
   }
 }
 
+///make clickable card
 GestureDetector makeGestureDetector(Lecture card, BuildContext context, var update) =>
     GestureDetector(
       onTap: () {
@@ -157,6 +183,7 @@ GestureDetector makeGestureDetector(Lecture card, BuildContext context, var upda
       child: makeCard(card, update),
     );
 
+///card with the lecture details.
 Card makeCard(Lecture card, var update) => Card(
   child: Padding(
     padding: EdgeInsets.all(10.0),
@@ -165,7 +192,7 @@ Card makeCard(Lecture card, var update) => Card(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Column(children: <Widget>[
-          //print time
+          ///print time
           Text(card.startTime, style: TextStyle(fontSize: 15.0)),
           Text(card.endTime, style: TextStyle(fontSize: 15.0)),
         ]),
@@ -175,10 +202,10 @@ Card makeCard(Lecture card, var update) => Card(
         ),
         Expanded(
           child: Column(
-            //add the text of the card
+            ///add the text of the card
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              //the lecture name:
+              ///the lecture name
               Text(
                 card.lectureName,
                 maxLines: 1,
@@ -186,8 +213,8 @@ Card makeCard(Lecture card, var update) => Card(
                 TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 overflow: TextOverflow.ellipsis,
               ),
-              //the location
 
+              ///the location
               Row(
                 children: <Widget>[
                   Icon(Icons.location_on),
@@ -200,20 +227,21 @@ Card makeCard(Lecture card, var update) => Card(
                       softWrap: false,
                     ),
                   ),
-                  //Text(card.place, style: TextStyle(fontSize: 18.0), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,),
                 ],
               ),
-              //the lecturers:
+              ///the lecturers
               buildLecturers(card),
             ],
           ),
         ),
+        ///the button to switch to parallel lecture if have, or empty place if don't
         BuildTabButton(lecture: card, update: update,)
       ],
     ),
   ),
 );
 
+///build string of all lecturers or return empty container
 Widget buildLecturers(Lecture lecture) {
   String lecturers = "";
   if (lecture != null &&
@@ -244,6 +272,7 @@ Widget buildLecturers(Lecture lecture) {
     return Container();
 }
 
+///build button for switch between parallel lecture if have
 class BuildTabButton extends StatelessWidget {
   BuildTabButton({this.lecture, this.update});
 
@@ -259,7 +288,6 @@ class BuildTabButton extends StatelessWidget {
       child: RaisedButton(
         child: Icon(Icons.compare_arrows),
         onPressed: () {
-          //todo: implement
           changeToParallel();
           conferenceCard.sortLectures();
           update();
@@ -268,6 +296,7 @@ class BuildTabButton extends StatelessWidget {
     );
   }
 
+  ///return true if have another lecture in same time
   bool haveParallel(Lecture lecture) {
     for (Lecture pLecture in conferenceCard.parallelLectures) {
       if (pLecture.startTime == lecture.startTime) return true;
@@ -275,6 +304,7 @@ class BuildTabButton extends StatelessWidget {
     return false;
   }
 
+  ///switch between the lecture and the parallel lecture
   void changeToParallel(){
     for (Lecture pLecture in conferenceCard.parallelLectures) {
       if (pLecture.startTime == lecture.startTime){
@@ -287,5 +317,3 @@ class BuildTabButton extends StatelessWidget {
     }
   }
 }
-
-

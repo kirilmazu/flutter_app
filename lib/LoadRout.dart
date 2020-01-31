@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Communication.dart';
+import 'Constants.dart';
 
 class LoadRout extends StatelessWidget {
   LoadRout({Key key}) :super(key: key);
@@ -7,10 +8,6 @@ class LoadRout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text("Loading data"),
-      ),*/
-
       body: Center(
           child:Column(
             children: <Widget>[
@@ -31,9 +28,13 @@ class LoadRout extends StatelessWidget {
   }
 
   Container loadDate(BuildContext context){
-    DataBaseCommunication.loadData(true).then((result) {
-      Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
-    });
+    try {
+      DataBaseCommunication.loadData(true).then((result) {
+        Storage.loadUser();
+        Navigator.popUntil(
+            context, ModalRoute.withName(Navigator.defaultRouteName));
+      });
+    }catch(e) {print("ERROR: " + e.toString());}
     return Container();
   }
 }

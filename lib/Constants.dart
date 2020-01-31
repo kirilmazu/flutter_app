@@ -1,65 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 User currentUser;
 
 class Constants{
-  static bool darkTeam = true;
-
-  static const String Register = 'Regester';
+  static const String Register = 'Register';
   static const String About = 'About';
-  static const String Notes = 'Notes';
-  static const String Tests = 'Tests';
 
-  static const List<String> choices = <String>[Register, Notes, About, Tests];
+  static const List<String> choices = <String>[Register, About];
 
+  ///use for about rout
   static const String aboutText = "We are students from the Kinneret Academic College who have been asked to build a conference management and management systemthat is carried out at the college.\n"
       + "And that the system can be used by any organization and not necessarily just the college,\n"
       + "so we chose to build the system as a web system for building and managing the advanced conference in Angular, and an Android application to be used for viewing at conferences";
 }
 
-const bool darkTeam = true;
 const double imageW = 100;
 const double imageH = 75;
 const String defaultImage = 'images/kinneretLogo.jpg';
 
 class ConferenceCard{
-  final int    conferenceID;
   final String title;       //conference name
   final String description;
-  final Image image;
   final String place;      //location
   final String date;
   final String imageUrl;
   final List<Lecture> lectures;
   final List<Lecture> parallelLectures;
 
-  ConferenceCard(int conferenceID, String title, String description, String image, String place, String date):
-    this.conferenceID = conferenceID,
+  //indicator to check if the user add register to the conference
+  bool userAddToPlaner = false;
+
+  ConferenceCard(String title, String description, String image, String place, String date):
     this.title = title,
     this.description =description,
-    this.image = imageByUrl(image),
     this.imageUrl = image,
     this.place = place,
     this.date = date,
     this.lectures = new List(),
     this.parallelLectures = new List();
-
-  static Image imageByUrl(String url){
-    return Image.asset(defaultImage, width: imageW, height: imageH,);
-    /*try {
-      final image = Image.network(
-        url,
-        width: imageW,
-        height: imageH,
-      );
-      return image;
-    }on Exception catch(exception){
-      return Image.asset('images/kinneretLogo.jpg', width: imageW, height: imageH,);
-    }*/
-  }
 
   ///sort the lectures by start time
   void sortLectures(){
@@ -83,35 +61,34 @@ class ConferenceCard{
     //remove all from list and add all from sorted list
     this.lectures.removeRange(0, this.lectures.length);
     this.lectures.addAll(newLectures);
+  }
 
+  String toString(){
+    return "Conference;" + title + ";" + description + ";" + place==null?" ":place + ";" + date + ";" + imageUrl;
+  }
 
-    bool haveParallel(Lecture lecture){
-      for(Lecture pLecture in this.parallelLectures){
-        if(pLecture.startTime == lecture.startTime) return true;
-      }
-      return false;
-    }
-
-    Lecture getParallel(Lecture lecture){
-      for(Lecture pLecture in parallelLectures){
-        if(pLecture.startTime == lecture.startTime) return pLecture;
-      }
-      return null;
-    }
-
+  static ConferenceCard fromString(String conferenceCardString){
+    List<String> splitedconferenceCardString = conferenceCardString.split(";");
+    if(splitedconferenceCardString[0] != "Conference") return null;
+    String title = splitedconferenceCardString[1];
+    String description = splitedconferenceCardString[2];
+    String place = splitedconferenceCardString[3];
+    if(place == " ") place = null;
+    String date = splitedconferenceCardString[4];
+    String image = splitedconferenceCardString[5];
+    return new ConferenceCard(title, description, image, place, date);
   }
 }
 
 class Lecture{
-  Lecture({this.conferenceName, this.lectureName, this.lectureId, this.startTime, this.endTime, this.lecturers, this.place, this.description, this.file});
+  Lecture({this.conferenceName, this.lectureName, this.startTime, this.endTime, this.lecturers, this.place, this.description, this.file});
   final String lectureName;
-  final int lectureId;
   final String startTime;
   final String endTime;
   final List<Lecturer> lecturers;
   final String place;      //class
   final String description;
-  final String file;
+  final String file; //todo: implement
   final String conferenceName;
 
   /// get string in format HH:MM and return the hour as int
@@ -123,68 +100,84 @@ class Lecture{
   int minuteOfStart(){
     return int.parse(this.startTime.split(":")[1]);
   }
-}
 
-class Day{
-  Day({this.dayName, this.lectureCards});
-  final String dayName;
-  final List<Lecture> lectureCards;
+  String toString(){
+    String lectureString = "Lecture;" + lectureName + ";" + startTime + ";" + endTime + ";" + place + ";" + description + ";";
+    if(file == null) lectureString += "; ;";
+    else lectureString += ";" + file + ";";
+    lectureString += conferenceName;
+    return lectureString;
+  }
+
+  static Lecture fromString(String lectureString){
+    List<String> splitedLectureString = lectureString.split(";");
+    if(splitedLectureString[0] != "Lecture") return null;
+    String lectureName = splitedLectureString[1];
+    String startTime = splitedLectureString[2];
+    String endTime = splitedLectureString[3];
+    String place = splitedLectureString[4];
+    String description = splitedLectureString[5];
+    String file = splitedLectureString[6];
+    if(file == " ") file = null;
+    String conferenceName = splitedLectureString[7];
+    Lecture lecture = new Lecture(lectureName: lectureName, startTime: startTime, endTime: endTime, place: place, description: description, lecturers: [], file: file, conferenceName: conferenceName);
+    return lecture;
+  }
 }
 
 class Lecturer{
-  Lecturer({this.id, this.name, this.company, this.cv, this.role, this.main, this.image, this.lectureName, this.imageUrl});
-  final int id;
+  Lecturer({this.name, this.company, this.cv, this.role, this.main, this.lectureName, this.imageUrl});
   final String name;
   final String company;
   final String cv;
   final String role;
   final bool main; //is it main lecturer
-  final Image image;
   final String lectureName;
   final String imageUrl;
+
+  String toString(){
+    String isMain = (main==true)?"1":"0";
+    return "Lecturer;" + name + ";" + company + ";" + cv + ";" + role + ";" + isMain + ";" + lectureName + ";" + imageUrl;
+  }
+
+  static Lecturer fromString(String lecturerString){
+    List<String> splitedLecturerString = lecturerString.split(";");
+    if(splitedLecturerString[0] != "Lecturer") return null;
+    String name = splitedLecturerString[1];
+    String company = splitedLecturerString[2];
+    String cv = splitedLecturerString[3];
+    String role = splitedLecturerString[4];
+    bool main = splitedLecturerString[5]=="1"?true:false;
+    String lectureName = splitedLecturerString[6];
+    String imageUrl = splitedLecturerString[7];
+    Lecturer lecturer = new Lecturer(name: name, company: company, cv: cv, role: role, main: main, lectureName: lectureName, imageUrl: imageUrl);
+    return lecturer;
+  }
 }
 
 class User{
-  User({this.id, this.fullName, this.company, this.role, this.email});
-  final int id;
+  User({this.fullName, this.company, this.role, this.email});
   final String email;
   final String fullName;
   final String company;
   final String role;
-}
 
-
-class Storage{
-  Future<String> get localPath async{
-    final dir = await getApplicationDocumentsDirectory();
-    return dir.path;
+  @override
+  String toString() {
+    String userString = email + ";" + fullName + ";" + company + ";" + role;
+    return userString;
   }
 
-  Future<File> get localFile async{
-    final path = await localPath;
-    return File('$path/user.txt');
+  static User fromString(String userString){
+    if(userString == null || userString == "") return null;
+    List<String> splitedString = userString.split(";");
+    if(splitedString.length < 3) return null;
+    String email    = splitedString[0];
+    String fullName = splitedString[1];
+    String company  = splitedString[2];
+    String role     = splitedString[3];
+    return new User(fullName: fullName, company: company, role: role, email: email);
   }
-
-  Future<String> readData() async{
-    try{
-      final file = await localFile;
-      String body = await file.readAsString();
-
-      return body;
-    }catch(e){
-      return e.toString();
-    }
-  }
-
-  Future<File> writeData(String data) async{
-    final file = await localFile;
-    return file.writeAsString("$data");
-  }
-
-}
-
-class Data{
-
 }
 
 ///table names and columns numbers to get data from the database

@@ -16,7 +16,6 @@ class AboutRout extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  //TODO: add text, from server?
               Text("About this app",
                 style: TextStyle(
                     fontSize: 20.0, fontWeight: FontWeight.bold),

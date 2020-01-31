@@ -1,31 +1,29 @@
+import 'dart:async';
+import 'dart:core';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/Data.dart';
-import 'dart:async';
 import 'package:mysql1/mysql1.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 class Communication{
-
   static List<ConferenceCard> getConferenceCards(){
-    return GetTestData.getConferenceCards();
+    return MyData.getConferenceCards;
   }
 
-
   static List<Lecture> getLectureCards(){
-    return GetTestData.getLectureCards();
+    return MyData.getLectureCards;
   }
 
   static Future<void> registerToConference(String conferenceName) async {
     User user = currentUser;
-    //todo implement
-
-
+    //todo: implement
   }
 
-  static void registerToLecture(int lectureID){
+  static void registerToLecture(int lectureID){//todo: remove it
     User user = currentUser;
   }
 }
@@ -37,27 +35,33 @@ class DataBaseCommunication{
     String userName = "a5095c_webconf";
     String pass = "0505690866A.";
     int port = 3306;
-
-    final connection = await MySqlConnection.connect(new ConnectionSettings(
-      host: host,
-      port: port,
-      user: userName,
-      password: pass,
-      db: dataBase,
-    ));
-
-    return connection;
+    try {
+      final connection = await MySqlConnection.connect(new ConnectionSettings(
+        host: host,
+        port: port,
+        user: userName,
+        password: pass,
+        db: dataBase,
+      ));
+      return connection;
+    }catch(e){print("ERROR: " + e.toString());}//todo remove
   }
 
   static Future<Results>  runQuery(String myQuery) async {
-    var myConnection = await connection;
+    var myConnection;
+    try {
+      myConnection = await connection;
+    }catch(e){print("ERROR: " + e.toString());}
+
     //run the query
     var results = await myConnection.query(myQuery);
+
     //close the connection
     await myConnection.close();
     //return mysql1.Results (list of fields)
     return results;
   }
+
 
   static Future<List<ConferenceCard>> loadData(bool loadAll) async {
     final res = await loadLecturers();
@@ -74,7 +78,7 @@ class DataBaseCommunication{
     Results results = await DataBaseCommunication.runQuery(myQuery);
     ConferenceCard conferenceCard;
     for(var row in results) {
-      conferenceCard = new ConferenceCard(0, row[DataBaseConstant.conferenceNameColumn],
+      conferenceCard = new ConferenceCard(row[DataBaseConstant.conferenceNameColumn],
         row[DataBaseConstant.conferenceDescriptionColumn],
         row[DataBaseConstant.conferenceImageColumn],
         row[DataBaseConstant.conferenceLocationColumn],
@@ -93,7 +97,6 @@ class DataBaseCommunication{
     Lecture lecture;
     for(var row in results) {
       lecture = new Lecture(
-        lectureId: 1,
         conferenceName: row[DataBaseConstant.lectureConferenceNameColumn],
         lectureName: row[DataBaseConstant.lectureNameColumn],
         startTime: row[DataBaseConstant.lectureStartColumn],
@@ -114,30 +117,14 @@ class DataBaseCommunication{
     String myQuery = "select * from " + DataBaseConstant.lecturerTableName;
     Results results = await DataBaseCommunication.runQuery(myQuery);
     Lecturer lecturer;
-    Image image;
     for(var row in results){
-      //todo fix image
-      /*if(row[DataBaseConstant.lecturerImageColumn] != null) {//check image
-        try {
-          image = Image.network(
-            row[DataBaseConstant.lecturerImageColumn],
-            width: imageW,
-            height: imageH,
-          );
-        } on Exception catch (exception) {
-          image = Image.asset(defaultImage, width: imageW, height: imageH,);
-        }
-      }else image = Image.asset(defaultImage, width: imageW, height: imageH,);*/
-      image = Image.asset(defaultImage, width: imageW, height: imageH,);
       //get Lecture
       lecturer = new Lecturer(
-          id: 1,
           name: row[DataBaseConstant.lecturerNameColumn],
           company: row[DataBaseConstant.lecturerCompanyColumn],
           role: row[DataBaseConstant.lecturerRoleColumn],
           cv: row[DataBaseConstant.lecturerCVColumn],
           main: row[DataBaseConstant.lecturerIsLectureColumn] == 1 ? true:false,
-          image: image,
           lectureName: row[DataBaseConstant.lecturerLectureNameColumn],
           imageUrl:  row[DataBaseConstant.lecturerImageColumn],
       );
@@ -145,6 +132,7 @@ class DataBaseCommunication{
     }
     return true;
   }
+  //todo: check it
 /*
   static Future<void> insertUser(User user) async{
     var myConnection = await connection;
@@ -166,4 +154,92 @@ class DataBaseCommunication{
     await myConnection.close();
   }*/
 
+}
+
+///use as interface with the local storage.
+class Storage{
+  static Future<String> get localPath async{
+    final dir = await getApplicationDocumentsDirectory();
+    return dir.path;
+  }
+
+  static Future<File> get userFile async{
+    final path = await localPath;
+    return File('$path/user.txt');
+  }
+
+  static Future<File> get dataFile async{
+    final path = await localPath;
+    return File('$path/data.txt');
+  }
+
+  static Future<String> readData() async{
+    try{
+      final file = await dataFile;
+      if(!file.existsSync()) file.createSync(recursive: true);
+      String body = await file.readAsString();
+
+      return body;
+    }catch(e){
+      return e.toString();
+    }
+  }
+
+  static Future<String> get readUser async{
+    try{
+      final file = await userFile;
+      if(!file.existsSync()) {
+        file.createSync(recursive: true);
+        return null;
+      }
+        String body = await file.readAsString();
+        return body;
+    }catch(e){
+      return null;
+    }
+  }
+
+  static Future<File> writeData(String data) async{
+    final file = await dataFile;
+    if(!file.existsSync()) file.createSync(recursive: true);
+    return file.writeAsString("$data");
+  }
+
+  static Future<File> writeUser(String data) async{
+    final file = await userFile;
+    if(!file.existsSync()) file.createSync(recursive: true);
+    return file.writeAsString("$data");
+  }
+
+  ///get the user from file
+  static void loadUser() async{
+    //if()
+    User user = User.fromString(await readUser);
+    currentUser = user;
+  }
+
+  ///save the user dta to local file
+  static void saveUser(User user){
+    writeUser(user.toString());
+  }
+
+  ///load the save data of conferences
+  static void loadData() async{
+    //todo: implement
+  }
+
+  ///save all conferences data
+  static void saveData() async{
+    String dataString = "";
+    for(ConferenceCard conferenceCard in MyData.getConferenceCards){
+      dataString += conferenceCard.toString() + "\n";
+    }
+    for(Lecture lecture in MyData.getLectureCards){
+      dataString += lecture.toString() + "\n";
+    }
+    for(Lecturer lecturer in MyData.getLecturers){
+      dataString += lecturer.toString() + "\n";
+    }
+    writeData(dataString);
+  }
 }

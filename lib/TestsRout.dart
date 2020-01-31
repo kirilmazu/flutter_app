@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_app/Constants.dart';
 
-//TODO: save data to file
-//TODO: get data from file
-//TODO: return to same route
-//TODO: check the import
+//TODO: remove this class
+
 class TestsRout extends StatelessWidget{
 
   Widget build(BuildContext context) {
