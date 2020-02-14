@@ -64,10 +64,24 @@ class DataBaseCommunication{
 
 
   static Future<List<ConferenceCard>> loadData(bool loadAll) async {
-    final res = await loadLecturers();
+    final res0 = await loadParticipants();
+    final res1 = await loadLecturers();
     final res2 = await loadLecture();
     final res3 = await loadConference(loadAll);
     return Communication.getConferenceCards();
+  }
+
+  ///Load participants
+  static Future<bool> loadParticipants() async{
+    String publish;
+    if(currentUser == null || currentUser.email == null) return false;
+    else publish = " where " + DataBaseConstant.participantsEmailColumnString + " LIKE '" + currentUser.email.split("@")[0] + "%'";
+    String myQuery = "select * from "  + DataBaseConstant.participantsTableName + publish;
+    Results results = await DataBaseCommunication.runQuery(myQuery);
+    for(var row in results){
+      MyData.addParticipants(row[DataBaseConstant.participantsConferenceNameColumnString]);
+    }
+    return true;
   }
 
 
@@ -83,7 +97,11 @@ class DataBaseCommunication{
         row[DataBaseConstant.conferenceImageColumn],
         row[DataBaseConstant.conferenceLocationColumn],
         row[DataBaseConstant.conferenceDateColumn],
+        false
       );
+      for(String participantsInConference in MyData.getMyParticipants){
+        if(participantsInConference == conferenceCard.title) conferenceCard.userAddToPlaner = true;
+      }
       MyData.addConference(conferenceCard);
     }
     MyData.updateConference();
@@ -132,27 +150,29 @@ class DataBaseCommunication{
     }
     return true;
   }
-  //todo: check it
-/*
-  static Future<void> insertUser(User user) async{
+
+  static Future<bool> insertUser(User user) async{
     var myConnection = await connection;
     //insert the user
-    var results = await myConnection.query("insert inte " + DataBaseConstant.userTableName
-        + "(FullName, Company, Role, Email) values (?, ?, ?, ?)", [user.fullName, user.company, user.role, user.email]);
+    var results = await myConnection.query("insert into " + DataBaseConstant.userTableName
+        + "(" + DataBaseConstant.userNameColumnString + ", " + DataBaseConstant.userCompanyColumnString + ", " + DataBaseConstant.userRoleColumnString +
+        ", " + DataBaseConstant.userEmailColumnString + ") values (?, ?, ?, ?)", [user.fullName, user.company, user.role, user.email]);
 
     //close the connection
     await myConnection.close();
+    return true;
   }
 
   static Future<void> insertParticipants(User user, String conferenceName) async{
     var myConnection = await connection;
     //insert the user
-    var results = await myConnection.query("insert inte " + DataBaseConstant.participantsTableName
-        + "(FullName, Company, Role, Email) values (?, ?, ?, ?)", [user.email, conferenceName]);
+    var results = await myConnection.query("insert into " + DataBaseConstant.participantsTableName
+        + "(" + DataBaseConstant.participantsEmailColumnString + ", " + DataBaseConstant.participantsConferenceNameColumnString +
+        ") values (?, ?)", [user.email, conferenceName]);
 
     //close the connection
     await myConnection.close();
-  }*/
+  }
 
 }
 
@@ -173,7 +193,7 @@ class Storage{
     return File('$path/data.txt');
   }
 
-  static Future<String> readData() async{
+  static Future<String> get readData async{
     try{
       final file = await dataFile;
       if(!file.existsSync()) file.createSync(recursive: true);
@@ -213,7 +233,7 @@ class Storage{
 
   ///get the user from file
   static void loadUser() async{
-    //if()
+    //todo: check if empty
     User user = User.fromString(await readUser);
     currentUser = user;
   }
@@ -225,7 +245,25 @@ class Storage{
 
   ///load the save data of conferences
   static void loadData() async{
-    //todo: implement
+    //todo: check if empty
+    readData.then((result){
+      List<String> dataList = result.split("\n");
+      String type;
+      for(String line in dataList){
+        type = line.split(";")[0];
+        if(type == ConferenceCard.getDataType) MyData.addConference(ConferenceCard.fromString(line));
+        if(type == "Planer"){
+          for(ConferenceCard conf in myConferenceCard){
+            if(conf.title == line.split(";")[1]){
+              myConferenceCard[myConferenceCard.indexOf(conf)].userAddToPlaner = line.split(";")[3]=="true"?true:false;
+              break;
+            }
+          }
+        }
+        if(type == Lecture.getDataType) MyData.addLecture(Lecture.fromString(line));
+        if(type == Lecturer.getDataType) MyData.addLecturer(Lecturer.fromString(line));
+      }
+    });
   }
 
   ///save all conferences data
@@ -233,6 +271,7 @@ class Storage{
     String dataString = "";
     for(ConferenceCard conferenceCard in MyData.getConferenceCards){
       dataString += conferenceCard.toString() + "\n";
+      dataString += "Planer" + ";" + conferenceCard.title + ";" + (conferenceCard.userAddToPlaner?"true":"false");
     }
     for(Lecture lecture in MyData.getLectureCards){
       dataString += lecture.toString() + "\n";
@@ -241,5 +280,6 @@ class Storage{
       dataString += lecturer.toString() + "\n";
     }
     writeData(dataString);
+    print("data saved");
   }
 }

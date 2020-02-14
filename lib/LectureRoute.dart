@@ -5,7 +5,7 @@ import 'package:flutter_app/LecturerRoute.dart';
 
 
 class LectureRout extends StatelessWidget{
-  final Lecture card;
+  final Lecture card; //todo: change name
 
   LectureRout({Key key, @required this.card}):super(key: key);
 

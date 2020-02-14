@@ -82,6 +82,8 @@ class RegisterRout extends StatelessWidget {
               User user = new User(email: emailController.text, fullName: fullNameController.text, company: companyController.text, role: roleController.text);
               currentUser = user;
               Storage.saveUser(user);
+              DataBaseCommunication.insertUser(user);
+              Fluttertoast.showToast(msg: 'User registered');
               Navigator.pop(context);
             }else Fluttertoast.showToast(msg: 'Please fill all the fields');
           },

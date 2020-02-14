@@ -4,6 +4,9 @@ import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/LectureRoute.dart';
 import 'package:flutter_app/Communication.dart';
 import 'package:flutter_app/Data.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 import 'RegisterRout.dart';
 
@@ -77,10 +80,10 @@ class _BuildStatefulButton extends State<BuildStatefulButton> {
     setState(() {
       if(!conferenceCard.userAddToPlaner){
         buttonColor = Colors.blueAccent;
-        buttonText = "Add to planner";
+        buttonText = "Register to Conference";
       }else{
         buttonColor = Colors.orange;
-        buttonText = "Remove from planer";
+        buttonText = "Cancel registration";
       }
     });
   }
@@ -115,14 +118,36 @@ class _BuildStatefulButton extends State<BuildStatefulButton> {
     setState(() {
       if(buttonColor == Colors.blueAccent){
         buttonColor = Colors.orange;
-        buttonText = "Remove from planer";
+        buttonText = "Cancel registration";
+        conferenceCard.toggleUserAddToPlaner();
+        addToCalendar();
+        DataBaseCommunication.insertParticipants(currentUser, conferenceCard.title);
+        Fluttertoast.showToast(msg: 'User registered to conference');
+        Storage.saveData();
       }
       else{
         buttonColor = Colors.blueAccent;
-        buttonText = "Add to planner";
+        buttonText = "Register to Conference";
+        //todo: Cancel registration
       }
       MyData.toggleAddToPlanerStatus(conferenceCard);
     });
+  }
+
+
+  ///add to calender
+  void addToCalendar(){
+    DateTime startTime = MyData.dataTimeFromString(conferenceCard.date, conferenceCard.getMinLectureStartTime());
+    DateTime endTime = MyData.dataTimeFromString(conferenceCard.date, conferenceCard.getMaxLectureEndTime());
+    //create the event
+    final Event event = Event(
+      title: conferenceCard.title,
+      location: conferenceCard.place,
+      startDate: startTime,
+      endDate: endTime,
+    );
+    //set the event
+    Add2Calendar.addEvent2Cal(event);
   }
 }
 

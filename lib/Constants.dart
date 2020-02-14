@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 
-User currentUser;
+User currentUser; //todo: move it
 
 class Constants{
   static const String Register = 'Register';
@@ -13,7 +12,7 @@ class Constants{
       + "And that the system can be used by any organization and not necessarily just the college,\n"
       + "so we chose to build the system as a web system for building and managing the advanced conference in Angular, and an Android application to be used for viewing at conferences";
 }
-
+//todo: move it
 const double imageW = 100;
 const double imageH = 75;
 const String defaultImage = 'images/kinneretLogo.jpg';
@@ -30,14 +29,15 @@ class ConferenceCard{
   //indicator to check if the user add register to the conference
   bool userAddToPlaner = false;
 
-  ConferenceCard(String title, String description, String image, String place, String date):
+  ConferenceCard(String title, String description, String image, String place, String date, bool userAddToPlaner):
     this.title = title,
     this.description =description,
     this.imageUrl = image,
     this.place = place,
     this.date = date,
     this.lectures = new List(),
-    this.parallelLectures = new List();
+    this.parallelLectures = new List(),
+    this.userAddToPlaner = userAddToPlaner;
 
   ///sort the lectures by start time
   void sortLectures(){
@@ -64,8 +64,13 @@ class ConferenceCard{
   }
 
   String toString(){
-    return "Conference;" + title + ";" + description + ";" + place==null?" ":place + ";" + date + ";" + imageUrl;
+    String userAddToPlanerString;
+    if(userAddToPlaner) userAddToPlanerString = "true";
+    else userAddToPlanerString = "false";
+    return  getDataType + ";" + title + ";" + description + ";" + place==null?" ":place + ";" + date + ";" + imageUrl + ";" + userAddToPlanerString;
   }
+
+  static String get getDataType{ return "Conference"; }
 
   static ConferenceCard fromString(String conferenceCardString){
     List<String> splitedconferenceCardString = conferenceCardString.split(";");
@@ -76,8 +81,39 @@ class ConferenceCard{
     if(place == " ") place = null;
     String date = splitedconferenceCardString[4];
     String image = splitedconferenceCardString[5];
-    return new ConferenceCard(title, description, image, place, date);
+    bool userAddToPlaner = splitedconferenceCardString[6]=="true"?true:false;
+    return new ConferenceCard(title, description, image, place, date, userAddToPlaner);
   }
+
+  String getMinLectureStartTime(){
+    Lecture minLect = null;
+    //get the minimal time
+    for(Lecture lecture in this.lectures){
+      if(minLect == null) minLect = lecture;
+      if(minLect.hourOfStart() >= lecture.hourOfStart())
+        if(minLect.minuteOfStart() > lecture.minuteOfStart()) minLect = lecture;
+        else if(minLect.hourOfStart() > lecture.hourOfStart()) minLect = lecture;
+    }
+    print("min: " + minLect.startTime);
+    if(minLect.startTime.split(":")[0].length < 2) return "0" + minLect.startTime;
+    return minLect.startTime;
+  }
+
+  String getMaxLectureEndTime(){
+    Lecture maxLect = null;
+    //get the minimal time
+    for(Lecture lecture in this.lectures){
+      if(maxLect == null) maxLect = lecture;
+      if(maxLect.hourOfEnd() < lecture.hourOfEnd())
+        if(maxLect.minuteOfEnd() < lecture.minuteOfStart()) maxLect = lecture;
+        else if(maxLect.hourOfEnd() < lecture.hourOfEnd()) maxLect = lecture;
+    }
+    print("max: " + maxLect.endTime);
+    return maxLect.endTime;
+  }
+
+  void toggleUserAddToPlaner(){ this.userAddToPlaner = !userAddToPlaner;}
+
 }
 
 class Lecture{
@@ -101,13 +137,25 @@ class Lecture{
     return int.parse(this.startTime.split(":")[1]);
   }
 
+  /// get string in format HH:MM and return the hour as int
+  int hourOfEnd(){
+    return int.parse(this.endTime.split(":")[0]);
+  }
+
+  /// get string in format HH:MM and return the minutes as int
+  int minuteOfEnd(){
+    return int.parse(this.endTime.split(":")[1]);
+  }
+
   String toString(){
-    String lectureString = "Lecture;" + lectureName + ";" + startTime + ";" + endTime + ";" + place + ";" + description + ";";
+    String lectureString = getDataType + ";" + lectureName + ";" + startTime + ";" + endTime + ";" + place + ";" + description + ";";
     if(file == null) lectureString += "; ;";
     else lectureString += ";" + file + ";";
     lectureString += conferenceName;
     return lectureString;
   }
+
+  static String get getDataType {return "Lecture";}
 
   static Lecture fromString(String lectureString){
     List<String> splitedLectureString = lectureString.split(";");
@@ -137,8 +185,10 @@ class Lecturer{
 
   String toString(){
     String isMain = (main==true)?"1":"0";
-    return "Lecturer;" + name + ";" + company + ";" + cv + ";" + role + ";" + isMain + ";" + lectureName + ";" + imageUrl;
+    return getDataType + ";" + name + ";" + company + ";" + cv + ";" + role + ";" + isMain + ";" + lectureName + ";" + imageUrl;
   }
+
+  static String get getDataType {return "Lecturer";}
 
   static Lecturer fromString(String lecturerString){
     List<String> splitedLecturerString = lecturerString.split(";");
@@ -190,6 +240,7 @@ class DataBaseConstant{
   static const int conferenceDescriptionColumn = 3;
   static const int conferencePublishColumn = 5;
   static const int conferenceImageColumn = 6;
+
   //Lecturer
   static const String lecturerTableName = "tblauthors";
   static const int lecturerNameColumn = 0;
@@ -199,6 +250,7 @@ class DataBaseConstant{
   static const int lecturerIsLectureColumn = 4;
   static const int lecturerImageColumn = 5;
   static const int lecturerLectureNameColumn = 6;
+
   //Lecture
   static const String lectureTableName = "tbllecture";
   static const int lectureNameColumn = 0;
@@ -208,16 +260,28 @@ class DataBaseConstant{
   static const int lectureLocationColumn = 4;
   static const int lectureFileColumn = 5;
   static const int lectureConferenceNameColumn = 6;
-  //user
+
+  //conference user
   static const String userTableName = "tblconferenceuser";
   static const int userNameColumn = 1;
   static const int userPasswordColumn = 2;
   static const int userCompanyColumn = 3;
   static const int userRoleColumn = 4;
   static const int userEmailColumn = 5;
+  //conference user as strings
+  static const String userNameColumnString = "FullName";
+  static const String userPasswordColumnString = "Password";
+  static const String userCompanyColumnString = "Company";
+  static const String userRoleColumnString = "Role";
+  static const String userEmailColumnString = "Email";
+
   //participants
   static const String participantsTableName = "tblparticipants";
   static const int participantsEmailColumn = 1;
   static const int participantsConferenceNameColumn = 2;
   static const int participantsLectureNameColumn = 3;
+  //participants as strings
+  static const String participantsEmailColumnString = "UserEmail";
+  static const String participantsConferenceNameColumnString = "ConferenceName";
+  static const String participantsLectureNameColumnString = "LectureName";
 }

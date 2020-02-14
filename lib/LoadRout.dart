@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Communication.dart';
-import 'Constants.dart';
+import 'package:flutter_app/Communication.dart' as prefix0;
+import 'package:flutter_app/Data.dart';
 
 class LoadRout extends StatelessWidget {
   LoadRout({Key key}) :super(key: key);
@@ -29,8 +30,15 @@ class LoadRout extends StatelessWidget {
 
   Container loadDate(BuildContext context){
     try {
-      DataBaseCommunication.loadData(true).then((result) {
-        Storage.loadUser();
+      Storage.loadUser();
+      try {
+        DataBaseCommunication.loadParticipants();
+      }catch(e) {print("ERROR: " + e.toString());}
+      DataBaseCommunication.loadData(false).then((result) {
+        Storage.loadData();
+        MyData.removeDuplicate();
+        Storage.saveData();
+        MyData.updateParticipants();
         Navigator.popUntil(
             context, ModalRoute.withName(Navigator.defaultRouteName));
       });

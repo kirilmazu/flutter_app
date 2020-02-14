@@ -1,3 +1,4 @@
+import 'package:flutter_app/Communication.dart';
 import 'package:flutter_app/Constants.dart';
 
 class MyData{
@@ -23,6 +24,25 @@ class MyData{
 
   static void addLecture(Lecture lecture) {
     myLectureCards.add(lecture);
+  }
+
+  static void addParticipants(String participantsInConference){
+    myParticipants.add(participantsInConference);
+  }
+
+  static List<String> get getMyParticipants{
+    return myParticipants;
+  }
+
+  static void updateParticipants(){
+    if(currentUser == null) return;
+    DataBaseCommunication.loadParticipants().then((onValue){
+      for(String parConf in myParticipants){
+        for(ConferenceCard card in myConferenceCard){
+          if(parConf == card.title)card.userAddToPlaner = true;
+        }
+      }
+    });
   }
 
   ///populate the lectures and conference
@@ -62,14 +82,33 @@ class MyData{
     }
   }//updateConference
 
+  ///remove duplicate from all
   static void removeDuplicate(){
-    //todo: implement or remove
-    //remove duplicate from lecturers
-
-    //remove duplicate from lectures
-
-    //remove duplicate from conferences
-
+    int count = 0;
+    //remove duplicate conferenceCard
+    for(ConferenceCard conferenceCard in myConferenceCard){
+      count = 0;
+      for(ConferenceCard con in myConferenceCard){
+        if(con == conferenceCard) count++;
+      }
+      if(count>1) myConferenceCard.remove(conferenceCard);
+    }
+    //remove duplicate lectures
+    for(Lecture lecture in myLectureCards){
+      count = 0;
+      for(Lecture lect in myLectureCards){
+        if(lect == lecture) count++;
+      }
+      if(count>1) myLectureCards.remove(lecture);
+    }
+    //remove duplicate lecturers
+    for(Lecturer lecturer in myLecturers){
+      count = 0;
+      for(Lecturer lecturerTemp in myLecturers){
+        if(lecturer == lecturerTemp) count++;
+      }
+      if(count>1) myLecturers.remove(lecturer);
+    }
   }
 
   static void toggleAddToPlanerStatus(ConferenceCard conferenceCard){
@@ -85,25 +124,31 @@ class MyData{
   static String get myDataToString{
     String dataString = "";
     for(ConferenceCard conferenceCard in myConferenceCard){
-      //todo: implement
+
     }
+    //remove duplicate lectures
     for(Lecture lecture in myLectureCards){
-      //todo: implement
+
     }
+    //remove duplicate lecturers
     for(Lecturer lecturer in myLecturers){
-      //todo: implement
+
     }
     return dataString;
   }
 
-  static void myDataFromString(String myDataString){
+  static DateTime dataTimeFromString(String dataString, String timeString) {
     //todo: implement
+    return DateTime.parse(dataString + " " + timeString + ":00");
   }
 }
-
+//todo: move it
 ///object to store the conferences
 List<ConferenceCard> myConferenceCard = [];
 ///object to store the lecturers data
 List<Lecturer> myLecturers = [];
 ///object to store the lectures data
 List<Lecture> myLectureCards = [];
+
+///
+List<String> myParticipants = [];
