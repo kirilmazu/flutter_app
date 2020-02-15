@@ -5,34 +5,34 @@ import 'package:flutter_app/LecturerRoute.dart';
 
 
 class LectureRout extends StatelessWidget{
-  final Lecture card; //todo: change name
+  final Lecture lecture; //todo: change name
 
-  LectureRout({Key key, @required this.card}):super(key: key);
+  LectureRout({Key key, @required this.lecture}):super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(card.lectureName),
+        title: Text(lecture.lectureName),
       ),
 
       body: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(card.lectureName,
+            Text(lecture.lectureName,
               style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold),),
             Divider(
               color: Colors.lightBlue,
             ),
-            BuildTime(card: card,),
-            BuildPlace(card: card,),
-            buildLecturers(card.lecturers),
+            BuildTime(card: lecture,),
+            BuildPlace(card: lecture,),
+            buildLecturers(lecture.lecturers),
             Divider(
               color: Colors.lightBlue,
             ),
 
-            BuildDescription(card: card,),
+            BuildDescription(card: lecture,),
 
             Divider(
               color: Colors.lightBlue,

@@ -155,10 +155,10 @@ Card makeCard(ConferenceCard card) => Card(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
     FadeInImage.assetNetwork(//add image to the card
-      placeholder: defaultImage,
+      placeholder: Constants.defaultImage,
       image: card.imageUrl,
-        height: imageW,
-        width: imageW,
+        height: Constants.imageW,
+        width: Constants.imageW,
     ),
         Container(//make space between the image and the text
           width: 8,

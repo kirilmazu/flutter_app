@@ -1,6 +1,4 @@
 
-User currentUser; //todo: move it
-
 class Constants{
   static const String Register = 'Register';
   static const String About = 'About';
@@ -11,11 +9,11 @@ class Constants{
   static const String aboutText = "We are students from the Kinneret Academic College who have been asked to build a conference management and management systemthat is carried out at the college.\n"
       + "And that the system can be used by any organization and not necessarily just the college,\n"
       + "so we chose to build the system as a web system for building and managing the advanced conference in Angular, and an Android application to be used for viewing at conferences";
+
+  static const double imageW = 100;
+  static const double imageH = 75;
+  static const String defaultImage = 'images/kinneretLogo.jpg';
 }
-//todo: move it
-const double imageW = 100;
-const double imageH = 75;
-const String defaultImage = 'images/kinneretLogo.jpg';
 
 class ConferenceCard{
   final String title;       //conference name

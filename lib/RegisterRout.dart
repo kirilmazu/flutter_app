@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Communication.dart';
 import 'package:flutter_app/Constants.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_app/Data.dart';
 
 
 // ignore: must_be_immutable
@@ -77,6 +78,10 @@ class RegisterRout extends StatelessWidget {
         child: RaisedButton(
           child: Text("Register"),
           onPressed: (){
+            if(!emailController.text.contains("@")){
+              Fluttertoast.showToast(msg: 'Email need to contains @.');
+              return;
+            }
             if(emailController.text != "" && fullNameController.text != "" && companyController.text != "" && roleController.text != ""){
               //if all the fields filled
               User user = new User(email: emailController.text, fullName: fullNameController.text, company: companyController.text, role: roleController.text);

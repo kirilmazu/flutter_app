@@ -18,11 +18,6 @@ class Communication{
     return MyData.getLectureCards;
   }
 
-  static Future<void> registerToConference(String conferenceName) async {
-    User user = currentUser;
-    //todo: implement
-  }
-
   static void registerToLecture(int lectureID){//todo: remove it
     User user = currentUser;
   }

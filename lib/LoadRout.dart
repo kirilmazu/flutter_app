@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Communication.dart';
 import 'package:flutter_app/Communication.dart' as prefix0;
 import 'package:flutter_app/Data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoadRout extends StatelessWidget {
   LoadRout({Key key}) :super(key: key);
@@ -35,14 +36,19 @@ class LoadRout extends StatelessWidget {
         DataBaseCommunication.loadParticipants();
       }catch(e) {print("ERROR: " + e.toString());}
       DataBaseCommunication.loadData(false).then((result) {
-        Storage.loadData();
+        //Storage.loadData();
         MyData.removeDuplicate();
         Storage.saveData();
         MyData.updateParticipants();
         Navigator.popUntil(
             context, ModalRoute.withName(Navigator.defaultRouteName));
       });
-    }catch(e) {print("ERROR: " + e.toString());}
+    }catch(e) {
+      print("ERROR: " + e.toString());
+      Fluttertoast.showToast(msg: 'ERROR:' + e.toString());
+      Navigator.popUntil(
+          context, ModalRoute.withName(Navigator.defaultRouteName));
+    }
     return Container();
   }
 }

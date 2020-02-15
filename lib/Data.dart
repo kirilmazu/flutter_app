@@ -138,7 +138,6 @@ class MyData{
   }
 
   static DateTime dataTimeFromString(String dataString, String timeString) {
-    //todo: implement
     return DateTime.parse(dataString + " " + timeString + ":00");
   }
 }
@@ -149,6 +148,7 @@ List<ConferenceCard> myConferenceCard = [];
 List<Lecturer> myLecturers = [];
 ///object to store the lectures data
 List<Lecture> myLectureCards = [];
-
-///
+///The conference the user register for
 List<String> myParticipants = [];
+///The registered user
+User currentUser;

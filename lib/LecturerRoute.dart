@@ -16,14 +16,14 @@ class LecturerRout extends StatelessWidget {
       ),
 
       body: SingleChildScrollView(
-        child: Column(//TODO: check all for long text
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
             FadeInImage.assetNetwork(//add image to the card
-              placeholder: defaultImage,
+              placeholder: Constants.defaultImage,
               image: lecturer.imageUrl,
-              height: imageW,
-              width: imageW,
+              height: Constants.imageW,
+              width: Constants.imageW,
             ),
             Text(lecturer.name, style: TextStyle(fontSize: 20.0,),),
             Text(lecturer.company + ',' + lecturer.role, style: TextStyle(fontSize: 20.0,),),

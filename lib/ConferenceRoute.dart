@@ -33,7 +33,7 @@ class ConferenceRoute extends StatelessWidget {
             Center(
               child: FadeInImage.assetNetwork(
                 //add image to the card
-                placeholder: defaultImage,
+                placeholder: Constants.defaultImage,
                 image: card.imageUrl,
               ),
             ),
@@ -48,7 +48,7 @@ class ConferenceRoute extends StatelessWidget {
             ),
             Text(
               card.description,
-            ), //TODO: check with long one
+            ),
             Divider(
               color: Colors.indigo,
             ),
@@ -105,7 +105,6 @@ class _BuildStatefulButton extends State<BuildStatefulButton> {
           }
           //if register canceled
           if(currentUser != null){
-            Communication.registerToConference(conferenceName);
             toggleButton();
           }
         },
@@ -202,7 +201,7 @@ GestureDetector makeGestureDetector(Lecture card, BuildContext context, var upda
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => LectureRout(card: card,)),
+              builder: (context) => LectureRout(lecture: card,)),
         );
       },
       child: makeCard(card, update),
